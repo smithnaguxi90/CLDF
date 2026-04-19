@@ -1,0 +1,126 @@
+export default class UIManager {
+  constructor() {
+    this.toastContainer = document.getElementById("toast-container");
+    this.backToTopBtn = document.getElementById("back-to-top");
+    this.initScrollListener();
+  }
+  initScrollListener() {
+    window.addEventListener("scroll", () => {
+      if (!this.backToTopBtn) return;
+
+      if (window.scrollY > 400) {
+        this.backToTopBtn.classList.remove(
+          "opacity-0",
+          "pointer-events-none",
+          "translate-y-4",
+        );
+        this.backToTopBtn.classList.add(
+          "opacity-100",
+          "pointer-events-auto",
+          "translate-y-0",
+        );
+      } else {
+        this.backToTopBtn.classList.add(
+          "opacity-0",
+          "pointer-events-none",
+          "translate-y-4",
+        );
+        this.backToTopBtn.classList.remove(
+          "opacity-100",
+          "pointer-events-auto",
+          "translate-y-0",
+        );
+      }
+    });
+  }
+  scrollTo(id) {
+    const el = document.getElementById(id);
+    if (el)
+      window.scrollTo({
+        top: el.getBoundingClientRect().top + window.pageYOffset - 80,
+        behavior: "smooth",
+      });
+  }
+  switchTab(tabId) {
+    ["cycle-a", "cycle-b", "cycle-c"].forEach((id) => {
+      const btn = document.getElementById(`tab-${id}`);
+      const content = document.getElementById(`content-${id}`);
+      if (!btn || !content) return;
+      if (id === tabId) {
+        btn.className = `flex-1 py-5 px-4 text-center font-bold text-sm sm:text-base border-b-2 transition-all whitespace-nowrap focus:outline-none min-w-[140px] relative z-10 border-emerald-600 text-emerald-700 bg-white shadow-sm`;
+        content.classList.remove("hidden");
+        content.classList.add("animate-fade-in");
+      } else {
+        btn.className = `flex-1 py-5 px-4 text-center font-medium text-sm sm:text-base border-b-2 border-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-100/50 transition-all whitespace-nowrap focus:outline-none min-w-[140px]`;
+        content.classList.add("hidden");
+        content.classList.remove("animate-fade-in");
+      }
+    });
+  }
+  showToast(message, type = "success") {
+    const toast = document.createElement("div");
+    const isSuccess = type === "success";
+    toast.className = `animate-toast-enter flex items-center gap-3 p-4 rounded-xl shadow-xl border backdrop-blur-md ${isSuccess ? "bg-emerald-50/90 border-emerald-200 text-emerald-800" : "bg-rose-50/90 border-rose-200 text-rose-800"}`;
+    toast.innerHTML = `<p class="text-sm font-semibold">${message}</p>`;
+    this.toastContainer.appendChild(toast);
+    setTimeout(() => {
+      toast.classList.replace("animate-toast-enter", "animate-toast-leave");
+      setTimeout(() => toast.remove(), 300);
+    }, 4000);
+  }
+
+  _initAudioCtx() {
+    if (!this.audioCtx) {
+      this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (this.audioCtx.state === "suspended") {
+      this.audioCtx.resume();
+    }
+    return this.audioCtx;
+  }
+
+  playBeep() {
+    try {
+      const ctx = this._initAudioCtx();
+      const oscillator = ctx.createOscillator();
+      const gainNode = ctx.createGain();
+
+      oscillator.type = "sine"; // Som suave e limpo
+      oscillator.frequency.setValueAtTime(880, ctx.currentTime); // Frequência do bipe (Nota A5)
+      gainNode.gain.setValueAtTime(0.05, ctx.currentTime); // Volume bem baixo (5%)
+      gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1); // Duração de 100ms
+
+      oscillator.connect(gainNode);
+      gainNode.connect(ctx.destination);
+      oscillator.start();
+      oscillator.stop(ctx.currentTime + 0.1);
+    } catch (e) {
+      // Ignora silenciosamente se o navegador bloquear o áudio
+    }
+  }
+
+  playSuccessSound() {
+    try {
+      const ctx = this._initAudioCtx();
+      const oscillator = ctx.createOscillator();
+      const gainNode = ctx.createGain();
+
+      oscillator.type = "sine";
+      const now = ctx.currentTime;
+
+      // Arpejo de vitória (Dó Maior: C5 -> E5 -> G5 -> C6)
+      oscillator.frequency.setValueAtTime(523.25, now);
+      oscillator.frequency.setValueAtTime(659.25, now + 0.1);
+      oscillator.frequency.setValueAtTime(783.99, now + 0.2);
+      oscillator.frequency.setValueAtTime(1046.5, now + 0.3);
+
+      gainNode.gain.setValueAtTime(0.08, now); // Volume um pouco mais alto que o bipe padrão
+      gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.8); // Duração de quase 1 segundo com fade out
+
+      oscillator.connect(gainNode);
+      gainNode.connect(ctx.destination);
+      oscillator.start(now);
+      oscillator.stop(now + 0.8);
+    } catch (e) {}
+  }
+}
