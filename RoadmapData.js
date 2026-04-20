@@ -1,0 +1,87 @@
+export const SPECIAL_MISSIONS = {
+  ti: {
+    id: "ti",
+    name: "Específicas (TI)",
+    shortName: "TI",
+    max: 247,
+    color: "cyan",
+  },
+  simulados: {
+    id: "simulados",
+    name: "Simulados Globais",
+    shortName: "Simul.",
+    max: 20,
+    color: "fuchsia",
+  },
+};
+
+export const COLORS_MAP = {
+  blue: "bg-blue-500",
+  teal: "bg-teal-500",
+  orange: "bg-orange-500",
+  emerald: "bg-emerald-500",
+  indigo: "bg-indigo-500",
+  violet: "bg-violet-500",
+  rose: "bg-rose-500",
+  cyan: "bg-cyan-500",
+  fuchsia: "bg-fuchsia-500",
+};
+
+export const SUBJECTS_QUEUE = [
+  {
+    id: "pt",
+    name: "Língua Portuguesa",
+    shortName: "Port.",
+    max: 91,
+    color: "blue",
+    phase: 1,
+  },
+  {
+    id: "const",
+    name: "Dir. Constitucional",
+    shortName: "Const.",
+    max: 125,
+    color: "teal",
+    phase: 1,
+  },
+  {
+    id: "eng",
+    name: "Língua Inglesa",
+    shortName: "Ingl.",
+    max: 33,
+    color: "orange",
+    phase: 1,
+  },
+  {
+    id: "admin",
+    name: "Dir. Administrativo",
+    shortName: "Admin.",
+    max: 132,
+    color: "emerald",
+    phase: 1,
+  },
+  {
+    id: "legis",
+    name: "Processo Legislativo",
+    shortName: "Legis.",
+    max: 71,
+    color: "indigo",
+    phase: 2,
+  },
+  {
+    id: "ridf",
+    name: "Realidade do DF",
+    shortName: "R. DF",
+    max: 16,
+    color: "violet",
+    phase: 2,
+  },
+  {
+    id: "emo",
+    name: "Inteligência Emocional",
+    shortName: "IE",
+    max: 6,
+    color: "rose",
+    phase: 3,
+  },
+];

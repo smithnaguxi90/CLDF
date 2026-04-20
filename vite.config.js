@@ -5,7 +5,7 @@ import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
 export default defineConfig({
   plugins: [
     VitePWA({
-      registerType: "autoUpdate",
+      registerType: "prompt",
       injectRegister: "auto",
       workbox: {
         globPatterns: ["**/*.{js,css,html,ico,png,svg}"], // Faz o cache de todos esses arquivos para rodar offline

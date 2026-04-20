@@ -2,7 +2,9 @@ export default class UIManager {
   constructor() {
     this.toastContainer = document.getElementById("toast-container");
     this.backToTopBtn = document.getElementById("back-to-top");
+    this.header = document.querySelector("header");
     this.initScrollListener();
+    this.initNetworkListeners();
   }
   initScrollListener() {
     window.addEventListener("scroll", () => {
@@ -37,30 +39,62 @@ export default class UIManager {
     const el = document.getElementById(id);
     if (el)
       window.scrollTo({
-        top: el.getBoundingClientRect().top + window.pageYOffset - 80,
+        top:
+          el.getBoundingClientRect().top +
+          window.scrollY -
+          (this.header?.offsetHeight ?? 80) -
+          16,
         behavior: "smooth",
       });
   }
+
+  initNetworkListeners() {
+    const dot = document.getElementById("network-status-dot");
+    const text = document.getElementById("network-status-text");
+
+    const updateNetworkStatus = () => {
+      if (navigator.onLine) {
+        if (dot)
+          dot.className =
+            "w-2 h-2 bg-emerald-500 rounded-full shadow-[0_0_6px_#10b981]";
+        if (text) text.textContent = "Sistema Operacional";
+      } else {
+        if (dot)
+          dot.className =
+            "w-2 h-2 bg-rose-500 rounded-full shadow-[0_0_6px_#e11d48] animate-pulse";
+        if (text) text.textContent = "Modo Offline";
+      }
+    };
+
+    window.addEventListener("online", updateNetworkStatus);
+    window.addEventListener("offline", updateNetworkStatus);
+
+    // Executa uma vez ao carregar para pegar o status atual
+    updateNetworkStatus();
+  }
+
   switchTab(tabId) {
     ["cycle-a", "cycle-b", "cycle-c"].forEach((id) => {
       const btn = document.getElementById(`tab-${id}`);
       const content = document.getElementById(`content-${id}`);
       if (!btn || !content) return;
       if (id === tabId) {
-        btn.className = `flex-1 py-5 px-4 text-center font-bold text-sm sm:text-base border-b-2 transition-all whitespace-nowrap focus:outline-none min-w-[140px] relative z-10 border-emerald-600 text-emerald-700 bg-white shadow-sm`;
+        btn.className = `flex-1 py-5 px-4 text-center font-bold text-sm sm:text-base border-b-2 transition-all whitespace-nowrap focus:outline-none min-w-[140px] relative z-10 border-emerald-500 text-emerald-400 bg-slate-800 shadow-sm`;
         content.classList.remove("hidden");
         content.classList.add("animate-fade-in");
       } else {
-        btn.className = `flex-1 py-5 px-4 text-center font-medium text-sm sm:text-base border-b-2 border-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-100/50 transition-all whitespace-nowrap focus:outline-none min-w-[140px]`;
+        btn.className = `flex-1 py-5 px-4 text-center font-medium text-sm sm:text-base border-b-2 border-transparent text-slate-500 hover:text-slate-300 hover:bg-slate-800/50 transition-all whitespace-nowrap focus:outline-none min-w-[140px]`;
         content.classList.add("hidden");
         content.classList.remove("animate-fade-in");
       }
     });
   }
   showToast(message, type = "success") {
+    if (!this.toastContainer) return;
+
     const toast = document.createElement("div");
     const isSuccess = type === "success";
-    toast.className = `animate-toast-enter flex items-center gap-3 p-4 rounded-xl shadow-xl border backdrop-blur-md ${isSuccess ? "bg-emerald-50/90 border-emerald-200 text-emerald-800" : "bg-rose-50/90 border-rose-200 text-rose-800"}`;
+    toast.className = `animate-toast-enter flex items-center gap-3 p-4 rounded-xl shadow-xl border backdrop-blur-md ${isSuccess ? "bg-emerald-900/90 border-emerald-800 text-emerald-100" : "bg-rose-900/90 border-rose-800 text-rose-100"}`;
     toast.innerHTML = `<p class="text-sm font-semibold">${message}</p>`;
     this.toastContainer.appendChild(toast);
     setTimeout(() => {
@@ -94,7 +128,7 @@ export default class UIManager {
       gainNode.connect(ctx.destination);
       oscillator.start();
       oscillator.stop(ctx.currentTime + 0.1);
-    } catch (e) {
+    } catch {
       // Ignora silenciosamente se o navegador bloquear o áudio
     }
   }
@@ -121,6 +155,6 @@ export default class UIManager {
       gainNode.connect(ctx.destination);
       oscillator.start(now);
       oscillator.stop(now + 0.8);
-    } catch (e) {}
+    } catch {}
   }
 }

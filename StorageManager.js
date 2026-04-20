@@ -1,20 +1,21 @@
 export default class StorageManager {
-  constructor(key) {
+  constructor(key, options = {}) {
     this.key = key;
     this.defaultState = { progress: {}, phase: 1 };
+    this.onImportError = options.onImportError || (() => {});
   }
   load() {
     try {
       const stored = localStorage.getItem(this.key);
       return stored ? JSON.parse(stored) : { ...this.defaultState };
-    } catch (e) {
+    } catch {
       return { ...this.defaultState };
     }
   }
   save(state) {
     try {
       localStorage.setItem(this.key, JSON.stringify(state));
-    } catch (e) {}
+    } catch {}
   }
   exportFile(state) {
     const jsonStr = JSON.stringify(state, null, 2);
@@ -37,8 +38,8 @@ export default class StorageManager {
           this.save(state);
           callback(state);
         } else throw new Error();
-      } catch (err) {
-        window.App.ui.showToast("Arquivo inválido.", "error");
+      } catch {
+        this.onImportError("Arquivo inválido.", "error");
       }
     };
     reader.readAsText(file);

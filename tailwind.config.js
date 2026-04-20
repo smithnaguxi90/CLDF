@@ -4,10 +4,11 @@ export default {
   safelist: [
     {
       pattern:
-        /(bg|text|border|shadow|ring)-(indigo|emerald|orange|slate|teal)-(50|100|200|300|400|500|600|700|800)/,
+        /(bg|text|border|shadow|ring)-(blue|teal|orange|emerald|indigo|violet|rose|cyan|fuchsia|slate)-(50|100|200|300|400|500|600|700|800|900|950)/,
     },
     {
-      pattern: /shadow-(indigo|emerald|orange|teal)-(500\/30)/,
+      pattern:
+        /shadow-(blue|teal|orange|emerald|indigo|violet|rose|cyan|fuchsia)-(500\/30)/,
     },
   ],
   theme: {
