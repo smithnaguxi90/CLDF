@@ -1,8 +1,10 @@
-import StorageManager from "./StorageManager.js";
+import FirestoreManager from "./FirestoreManager.js";
+import AuthManager from "./AuthManager.js";
 import UIManager from "./UIManager.js";
 import ChartManager from "./ChartManager.js";
 import RoadmapManager from "./RoadmapManager.js";
 import { registerSW } from "virtual:pwa-register";
+import ParticlesManager from "./ParticlesManager.js";
 
 export const App = {
   config: { storageKey: "cldfStudyEngine_v1" },
@@ -11,7 +13,9 @@ export const App = {
   ui: null,
   roadmap: null,
   chartManager: null,
-  init() {
+  auth: null,
+  particles: null,
+  async init() {
     // Evita que a inicialização ocorra mais de uma vez
     if (window._isAppInitialized) return;
     window._isAppInitialized = true;
@@ -21,18 +25,46 @@ export const App = {
       `${import.meta.env.VITE_APP_TITLE} - Versão: ${import.meta.env.VITE_APP_VERSION}`,
     );
 
-    this.storage = new StorageManager(this.config.storageKey);
     this.ui = new UIManager();
-    this.roadmap = new RoadmapManager();
+    this.roadmap = new RoadmapManager(this);
     const radarCtx = document.getElementById("radarChart")?.getContext("2d");
     const barCtx = document.getElementById("barChart")?.getContext("2d");
-    if (radarCtx || barCtx) {
-      this.chartManager = new ChartManager(radarCtx, barCtx, []);
+    const doughnutCtx = document
+      .getElementById("doughnutChart")
+      ?.getContext("2d");
+    if (radarCtx || barCtx || doughnutCtx) {
+      this.chartManager = new ChartManager(
+        radarCtx,
+        barCtx,
+        doughnutCtx,
+        [],
+        this.ui,
+      );
     }
-    this.state = this.storage.load();
-    this.roadmap.init();
-    this.ui.switchTab("cycle-a");
-    this.setupPWA();
+
+    // Inicializa a animação de fundo estilo jogo
+    this.particles = new ParticlesManager("particles-canvas");
+
+    // Aguarda o status da autenticação antes de carregar a tela
+    this.auth = new AuthManager(async (user) => {
+      if (user) {
+        this.ui.hideAuth();
+        this.storage = new FirestoreManager(
+          this.config.storageKey,
+          user.uid,
+          this.ui,
+        );
+        this.state = await this.storage.load();
+        this.roadmap.init();
+        this.ui.switchTab("cycle-a");
+        this.ui.hideLoading();
+        this.setupPWA();
+      } else {
+        this.ui.showAuth();
+        this.ui.hideLoading();
+      }
+    });
+
     this.setupEventListeners();
   },
   exportData() {
@@ -49,13 +81,13 @@ export const App = {
     });
     event.target.value = "";
   },
-  factoryReset() {
+  async factoryReset() {
     if (
       confirm(
         "ATENÇÃO: Isso apagará TODO o seu progresso e restaurará a aplicação para o estado inicial. Deseja continuar?",
       )
     ) {
-      localStorage.removeItem(this.config.storageKey);
+      await this.storage.clear();
       window.location.reload();
     }
   },
@@ -106,6 +138,12 @@ export const App = {
   },
   setupEventListeners() {
     document.addEventListener("click", (e) => {
+      // Fechar modal de estatísticas ao clicar no fundo embaçado
+      if (e.target.id === "stats-modal") {
+        this.ui.closeStatsModal();
+        return;
+      }
+
       const target = e.target.closest("[data-action]");
       if (!target) return;
 
@@ -124,7 +162,11 @@ export const App = {
       } else if (action === "clear-cache") {
         this.clearCache();
       } else if (action === "download-chart") {
-        if (this.chartManager) this.chartManager.downloadChart();
+        if (this.chartManager) this.chartManager.downloadRadarChart();
+      } else if (action === "open-stats") {
+        this.ui.openStatsModal();
+      } else if (action === "close-stats") {
+        this.ui.closeStatsModal();
       } else if (action === "toggle-completed") {
         this.roadmap.toggleCompleted();
       } else if (action === "update-subject") {
@@ -139,19 +181,72 @@ export const App = {
           target.dataset.name,
           parseInt(target.dataset.max, 10),
         );
+      } else if (action === "login") {
+        const email = document.getElementById("auth-email").value;
+        const pass = document.getElementById("auth-password").value;
+        if (!email || !pass)
+          return this.ui.showToast("Preencha todos os campos.", "error");
+        if (email.toLowerCase() !== "jefferson.araujo@camara.leg.br")
+          return this.ui.showToast(
+            "Acesso restrito ao administrador do sistema.",
+            "error",
+          );
+
+        this.ui.showToast("Autenticando...", "success");
+        this.auth.login(email, pass).catch((err) => {
+          console.error(err);
+          this.ui.showToast("Erro: Credenciais inválidas.", "error");
+        });
+      } else if (action === "register") {
+        const email = document.getElementById("auth-email").value;
+        const pass = document.getElementById("auth-password").value;
+        if (!email || !pass)
+          return this.ui.showToast("Preencha todos os campos.", "error");
+        if (email.toLowerCase() !== "jefferson.araujo@camara.leg.br")
+          return this.ui.showToast(
+            "Criação de conta restrita ao administrador.",
+            "error",
+          );
+        if (pass.length < 6)
+          return this.ui.showToast(
+            "A senha precisa de pelo menos 6 caracteres.",
+            "error",
+          );
+
+        this.ui.showToast("Criando conta...", "success");
+        this.auth
+          .register(email, pass)
+          .then(() => this.ui.showToast("Conta criada com sucesso!", "success"))
+          .catch((err) => {
+            console.error(err);
+            this.ui.showToast(
+              "Erro ao criar conta. Tente outro e-mail.",
+              "error",
+            );
+          });
+      } else if (action === "logout") {
+        if (confirm("Tem certeza que deseja sair?")) {
+          this.auth.logout();
+        }
       }
     });
 
     document.addEventListener("change", (e) => {
       const target = e.target.closest("[data-action]");
-      if (!target && target?.dataset?.action !== "import-data") return;
+      if (!target || target.dataset.action !== "import-data") return;
       this.importData(e);
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        const statsModal = document.getElementById("stats-modal");
+        if (statsModal && !statsModal.classList.contains("hidden")) {
+          this.ui.closeStatsModal();
+        }
+      }
     });
   },
 };
-
-// Truque fundamental: expõe a App globalmente para que os botões (onclick="App...") no HTML continuem funcionando
-window.App = App;
 
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", () => {

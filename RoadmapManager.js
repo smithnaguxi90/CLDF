@@ -1,21 +1,31 @@
-import { SPECIAL_MISSIONS, COLORS_MAP, SUBJECTS_QUEUE } from "./RoadmapData.js";
+import { SPECIAL_MISSIONS, SUBJECTS_QUEUE } from "./RoadmapData.js";
 import RoadmapRules from "./RoadmapRules.js";
 import RoadmapView from "./RoadmapView.js";
 
 export default class RoadmapManager {
-  constructor() {
+  constructor(appInstance) {
+    this.app = appInstance;
     this.SPECIAL_MISSIONS = SPECIAL_MISSIONS;
     this.SUBJECTS_QUEUE = SUBJECTS_QUEUE;
 
     this.view = new RoadmapView({
       SPECIAL_MISSIONS,
-      COLORS_MAP,
       SUBJECTS_QUEUE,
+    });
+
+    // Inicializa o Web Worker para processamento paralelo na Nuvem/Local
+    this.worker = new Worker(new URL("./cldf-worker.js", import.meta.url), {
+      type: "module",
+    });
+    this.worker.addEventListener("message", (e) => {
+      if (e.data.action === "RESULT_PROCESS_ROADMAP_DATA") {
+        this.applyRender(e.data.payload);
+      }
     });
   }
 
   init() {
-    if (!App.state.progress) App.state.progress = {};
+    if (!this.app.state.progress) this.app.state.progress = {};
     this.view.renderTrackersHTML();
     this.checkAndRender();
   }
@@ -24,31 +34,38 @@ export default class RoadmapManager {
     const subject = this.SUBJECTS_QUEUE.find((s) => s.id === id);
     if (
       subject &&
-      RoadmapRules.isPhaseBlocked(subject.phase, App.state.phase)
+      RoadmapRules.isPhaseBlocked(subject.phase, this.app.state.phase)
     ) {
-      App.ui.showToast(
-        `Fase Bloqueada! Conclua a Fase ${App.state.phase} primeiro.`,
+      if (this.app.ui && this.app.ui.playErrorSound)
+        this.app.ui.playErrorSound();
+      this.app.ui.showToast(
+        `Fase Bloqueada! Conclua a Fase ${this.app.state.phase} primeiro.`,
         "error",
       );
       return;
     }
-    let current = App.state.progress[id] || 0;
+    let current = this.app.state.progress[id] || 0;
     const oldCurrent = current;
     current += amount;
     if (current < 0) current = 0;
     if (current > max) current = max;
 
-    const isCompleting = current === max && App.state.progress[id] !== max;
+    const isCompleting = current === max && this.app.state.progress[id] !== max;
 
     if (isCompleting) {
-      if (App.ui && App.ui.playSuccessSound) App.ui.playSuccessSound();
+      if (this.app.ui && this.app.ui.playSuccessSound)
+        this.app.ui.playSuccessSound();
       this.view.celebrateSubjectCompletion();
-      App.ui.showToast(`Parabéns! Finalizou a matéria!`, "success");
-    } else if (current > oldCurrent && App.ui) {
-      App.ui.playBeep();
+      this.app.ui.showToast(`Parabéns! Finalizou a matéria!`, "success");
+    } else if (current > oldCurrent && this.app.ui) {
+      if (id === "ti" || id === "simulados") {
+        if (this.app.ui.playPowerUpSound) this.app.ui.playPowerUpSound();
+      } else {
+        this.app.ui.playBeep();
+      }
     }
-    App.state.progress[id] = current;
-    App.storage.save(App.state);
+    this.app.state.progress[id] = current;
+    this.app.storage.save(this.app.state);
     this.checkAndRender();
   }
 
@@ -63,49 +80,39 @@ export default class RoadmapManager {
   }
 
   toggleCompleted() {
-    this.view.toggleCompleted(App.state.progress, App.state.phase);
+    this.view.toggleCompleted(this.app.state.progress, this.app.state.phase);
   }
 
   checkAndRender() {
-    const newPhase = RoadmapRules.calculatePhase(App.state.progress);
+    // Delega os cálculos pesados e filtragens de arrays para o Worker em background
+    this.worker.postMessage({
+      action: "PROCESS_ROADMAP_DATA",
+      payload: {
+        progress: this.app.state.progress,
+        subjectsQueue: this.SUBJECTS_QUEUE,
+        specialMissions: this.SPECIAL_MISSIONS,
+      },
+    });
+  }
 
-    if (newPhase > App.state.phase) {
+  applyRender({ newPhase, visibleSubjects }) {
+    if (newPhase > this.app.state.phase) {
       this.view.celebratePhaseUnlock();
-      App.ui.showToast(
+      this.app.ui.showToast(
         `🎉 DESBLOQUEIO ÉPICO: Acesso Concedido à Fase ${newPhase}!`,
         "success",
       );
     }
 
-    App.state.phase = newPhase;
-    App.storage.save(App.state);
+    this.app.state.phase = newPhase;
+    this.app.storage.save(this.app.state);
 
-    this.view.renderValues(App.state.progress, App.state.phase);
-    this.view.updatePhaseUI(App.state.phase);
-    this.view.updateDynamicCycle(App.state.progress, App.state.phase);
+    this.view.renderValues(this.app.state.progress, this.app.state.phase);
+    this.view.updatePhaseUI(this.app.state.phase);
+    this.view.updateDynamicCycle(this.app.state.progress, this.app.state.phase);
 
-    if (App.chartManager) {
-      const pending = this.SUBJECTS_QUEUE.filter(
-        (sub) =>
-          (App.state.progress[sub.id] || 0) < sub.max &&
-          sub.phase <= App.state.phase,
-      );
-      const active = pending.slice(0, 4);
-      const completed = this.SUBJECTS_QUEUE.filter(
-        (sub) => (App.state.progress[sub.id] || 0) === sub.max,
-      );
-
-      // Mapeia na ordem original para o gráfico não ficar embaralhado
-      const visibleSubjectsList = this.SUBJECTS_QUEUE.filter(
-        (sub) => completed.includes(sub) || active.includes(sub),
-      );
-
-      const visibleSubjects = [
-        ...visibleSubjectsList,
-        this.SPECIAL_MISSIONS.ti,
-        this.SPECIAL_MISSIONS.simulados,
-      ];
-      App.chartManager.update(App.state.progress, visibleSubjects);
+    if (this.app.chartManager) {
+      this.app.chartManager.update(this.app.state.progress, visibleSubjects);
     }
   }
 }

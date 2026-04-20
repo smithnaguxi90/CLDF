@@ -1,10 +1,13 @@
 export default class ChartManager {
-  constructor(radarCtx, barCtx, subjects) {
+  constructor(radarCtx, barCtx, doughnutCtx, subjects, uiManager) {
     this.radarChart = null;
     this.barChart = null;
+    this.doughnutChart = null;
     this.radarCtx = radarCtx;
     this.barCtx = barCtx;
+    this.doughnutCtx = doughnutCtx;
     this.subjects = subjects;
+    this.ui = uiManager;
     this.compactMediaQuery = window.matchMedia("(max-width: 639px)");
     this.handleViewportChange = this.handleViewportChange.bind(this);
     this.colorHexMap = {
@@ -44,12 +47,12 @@ export default class ChartManager {
   }
   getRadarPointLabelFont() {
     return {
-      size: this.isCompactViewport() ? 9 : 10,
+      size: this.isCompactViewport() ? 11 : 14,
       weight: "bold",
     };
   }
   getXAxisFont() {
-    return { size: this.isCompactViewport() ? 9 : 10 };
+    return { size: this.isCompactViewport() ? 12 : 14 };
   }
   handleViewportChange() {
     const labels = this.getLabels();
@@ -65,6 +68,10 @@ export default class ChartManager {
       this.barChart.data.labels = labels;
       this.barChart.options.scales.x.ticks.font = this.getXAxisFont();
       this.barChart.update();
+    }
+
+    if (this.doughnutChart) {
+      this.doughnutChart.update();
     }
   }
   init() {
@@ -82,9 +89,9 @@ export default class ChartManager {
             {
               label: "Progresso (%)",
               data: [],
-              backgroundColor: "rgba(5, 150, 105, 0.2)",
-              borderColor: "rgba(5, 150, 105, 0.5)",
-              borderWidth: 1.5,
+              backgroundColor: "rgba(16, 185, 129, 0.25)",
+              borderColor: "#10b981",
+              borderWidth: 4,
               pointBackgroundColor: pointColors,
               pointBorderColor: "#fff",
               pointHoverBackgroundColor: "#fff",
@@ -104,8 +111,8 @@ export default class ChartManager {
           },
           scales: {
             r: {
-              angleLines: { color: "rgba(255, 255, 255, 0.1)" },
-              grid: { color: "rgba(255, 255, 255, 0.1)" },
+              angleLines: { color: "rgba(16, 185, 129, 0.2)" },
+              grid: { color: "rgba(16, 185, 129, 0.2)" },
               pointLabels: {
                 font: this.getRadarPointLabelFont(),
                 color: pointColors,
@@ -120,12 +127,65 @@ export default class ChartManager {
               },
             },
           },
-          plugins: { legend: { display: false } },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: "rgba(15, 23, 42, 0.95)", // bg-slate-950 com opacidade
+              titleFont: { size: 15, family: "Inter, sans-serif" },
+              bodyFont: {
+                size: 15,
+                family: "Inter, sans-serif",
+                weight: "bold",
+              },
+              padding: 12,
+              cornerRadius: 12,
+              borderColor: "rgba(51, 65, 85, 0.6)", // border-slate-700
+              borderWidth: 1,
+              callbacks: {
+                label: (context) => ` Progresso: ${context.raw}% Concluído`,
+              },
+            },
+          },
         },
+        plugins: [
+          {
+            id: "radar3D",
+            beforeDatasetsDraw(chart) {
+              chart.ctx.save();
+              chart.ctx.shadowColor = "rgba(16, 185, 129, 0.5)"; // Sombra verde brilhante
+              chart.ctx.shadowBlur = 20;
+              chart.ctx.shadowOffsetY = 12;
+            },
+            afterDatasetsDraw(chart) {
+              chart.ctx.restore();
+            },
+          },
+        ],
       });
     }
 
     if (this.barCtx) {
+      // Plugin customizado para desenhar os números no topo das barras
+      const topLabelsPlugin = {
+        id: "topLabels",
+        afterDatasetsDraw: (chart) => {
+          const { ctx } = chart;
+          chart.data.datasets.forEach((dataset, i) => {
+            const meta = chart.getDatasetMeta(i);
+            meta.data.forEach((bar, index) => {
+              const dataValue = dataset.data[index];
+              // Pega a cor correspondente mapeada na borda do gráfico
+              ctx.fillStyle = dataset.borderColor[index] || "#cbd5e1";
+              const fontSize = this.isCompactViewport() ? 13 : 15;
+              ctx.font = `bold ${fontSize}px Inter, sans-serif`;
+              ctx.textAlign = "center";
+              ctx.textBaseline = "bottom";
+              ctx.fillText(dataValue, bar.x, bar.y - 6);
+            });
+          });
+        },
+      };
+
       this.barChart = new Chart(this.barCtx, {
         type: "bar",
         data: {
@@ -136,12 +196,16 @@ export default class ChartManager {
               data: [],
               backgroundColor: pointColors,
               borderRadius: 6,
+              borderWidth: { top: 2, right: 2, bottom: 0, left: 2 },
+              borderColor: pointColors,
+              borderSkipped: false,
             },
           ],
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
+          layout: { padding: { top: 30 } }, // Aumentado para o número não cortar no teto
           animation: {
             duration: 1000,
             easing: "easeOutQuart",
@@ -155,13 +219,172 @@ export default class ChartManager {
             x: {
               grid: { display: false },
               ticks: {
-                color: "#64748b",
+                color: "#e2e8f0", // Deixa o texto das disciplinas bem mais brilhante
                 font: this.getXAxisFont(),
               },
             },
           },
-          plugins: { legend: { display: false } },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: "rgba(15, 23, 42, 0.95)",
+              titleFont: { size: 15, family: "Inter, sans-serif" },
+              bodyFont: {
+                size: 15,
+                family: "Inter, sans-serif",
+                weight: "bold",
+              },
+              padding: 12,
+              cornerRadius: 12,
+              borderColor: "rgba(51, 65, 85, 0.6)",
+              borderWidth: 1,
+              callbacks: {
+                label: (context) => ` Carga Horária: ${context.raw} Aulas`,
+              },
+            },
+          },
         },
+        plugins: [
+          topLabelsPlugin,
+          {
+            id: "bar3D",
+            beforeDatasetsDraw(chart) {
+              chart.ctx.save();
+              chart.ctx.shadowColor = "rgba(0, 0, 0, 0.6)"; // Sombra física escura
+              chart.ctx.shadowBlur = 15;
+              chart.ctx.shadowOffsetX = 8;
+              chart.ctx.shadowOffsetY = 8;
+            },
+            afterDatasetsDraw(chart) {
+              chart.ctx.restore();
+            },
+          },
+        ], // Ativa o nosso plugin no gráfico de barras
+      });
+    }
+
+    if (this.doughnutCtx) {
+      // Plugin customizado para desenhar a porcentagem geral no centro da rosca
+      const doughnutCenterTextPlugin = {
+        id: "doughnutCenterText",
+        beforeDraw(chart) {
+          const { ctx, width, height } = chart;
+          ctx.restore();
+
+          let totalCurrent = 0;
+          let totalMax = 0;
+          chart.data.datasets.forEach((ds) => {
+            totalCurrent += ds.data[0] || 0;
+            totalMax += (ds.data[0] || 0) + (ds.data[1] || 0);
+          });
+
+          const percent =
+            totalMax > 0 ? Math.round((totalCurrent / totalMax) * 100) : 0;
+
+          const fontSize = Math.min(width, height) * 0.18; // Tamanho responsivo maior
+          ctx.textBaseline = "middle";
+          ctx.textAlign = "center";
+
+          const textX = Math.round(width / 2);
+          const textY = Math.round(height / 2);
+
+          ctx.font = `800 ${fontSize}px Inter, sans-serif`;
+          ctx.fillStyle = "#f8fafc"; // Branco brilhante
+
+          // Efeito de sombra (profundidade) no texto central 3D
+          ctx.shadowColor = "rgba(0, 0, 0, 0.8)";
+          ctx.shadowBlur = 15;
+          ctx.shadowOffsetY = 5;
+          ctx.fillText(`${percent}%`, textX, textY - 5);
+
+          ctx.shadowBlur = 0;
+          ctx.shadowOffsetY = 0;
+
+          ctx.font = `bold ${fontSize * 0.35}px Inter, sans-serif`;
+          ctx.fillStyle = "#94a3b8"; // Cinza ardósia
+          ctx.fillText("GERAL", textX, textY + fontSize * 0.7);
+          ctx.save();
+        },
+      };
+
+      this.doughnutChart = new Chart(this.doughnutCtx, {
+        type: "doughnut",
+        data: {
+          labels: ["Concluído", "Pendente"],
+          datasets: [
+            {
+              label: "Específicas (TI)",
+              data: [0, 100],
+              backgroundColor: [
+                this.colorHexMap.cyan,
+                "rgba(8, 145, 178, 0.1)",
+              ], // Cyan
+              borderColor: ["#0f172a", "#0f172a"],
+              borderWidth: 2,
+              borderRadius: [20, 0], // Arredonda as pontas para aspecto de tubo 3D
+              hoverOffset: 5,
+            },
+            {
+              label: "Simulados Globais",
+              data: [0, 100],
+              backgroundColor: [
+                this.colorHexMap.fuchsia,
+                "rgba(192, 38, 211, 0.1)",
+              ], // Fuchsia
+              borderColor: ["#0f172a", "#0f172a"],
+              borderWidth: 2,
+              borderRadius: [20, 0],
+              hoverOffset: 5,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: "60%", // Deixa os anéis um pouco mais finos e elegantes
+          animation: { duration: 1000, easing: "easeOutQuart" },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: "rgba(15, 23, 42, 0.95)",
+              titleFont: { size: 15, family: "Inter, sans-serif" },
+              bodyFont: {
+                size: 15,
+                family: "Inter, sans-serif",
+                weight: "bold",
+              },
+              padding: 12,
+              cornerRadius: 12,
+              borderColor: "rgba(51, 65, 85, 0.6)",
+              borderWidth: 1,
+              callbacks: {
+                label: (context) => {
+                  const label = context.dataset.label || "";
+                  const unit =
+                    label === "Simulados Globais" ? "Simulados" : "Aulas";
+                  const isCompleted = context.dataIndex === 0;
+                  return ` ${label}: ${context.raw} ${unit} (${isCompleted ? "Concluído" : "Pendente"})`;
+                },
+              },
+            },
+          },
+        },
+        plugins: [
+          doughnutCenterTextPlugin,
+          {
+            id: "doughnut3D",
+            beforeDatasetsDraw(chart) {
+              chart.ctx.save();
+              chart.ctx.shadowColor = "rgba(0, 0, 0, 0.7)"; // Sombra de profundidade alta
+              chart.ctx.shadowBlur = 15;
+              chart.ctx.shadowOffsetX = 5;
+              chart.ctx.shadowOffsetY = 10;
+            },
+            afterDatasetsDraw(chart) {
+              chart.ctx.restore();
+            },
+          },
+        ],
       });
     }
   }
@@ -174,6 +397,15 @@ export default class ChartManager {
     const pointColors = this.subjects.map(
       (s) => this.colorHexMap[s.color] || "#94a3b8",
     );
+
+    // Criação de gradientes simulando sombra e profundidade (Cilindros 3D) nas barras
+    const barGradients = this.subjects.map((s) => {
+      const hex = this.colorHexMap[s.color] || "#94a3b8";
+      const gradient = this.barCtx.createLinearGradient(0, 0, 0, 300);
+      gradient.addColorStop(0, hex); // Cor brilhante no topo
+      gradient.addColorStop(1, "#020617"); // Sombra profunda na base
+      return gradient;
+    });
 
     const radarData = this.subjects.map((s) => {
       const current = progress[s.id] || 0;
@@ -194,12 +426,48 @@ export default class ChartManager {
     if (this.barChart) {
       this.barChart.data.labels = labels;
       this.barChart.data.datasets[0].data = barData;
-      this.barChart.data.datasets[0].backgroundColor = pointColors;
+      this.barChart.data.datasets[0].backgroundColor = barGradients;
+      this.barChart.data.datasets[0].borderColor = pointColors;
       this.barChart.update();
+    }
+
+    if (this.doughnutChart) {
+      // Gradiente 3D simulando luz e sombra nos "tubos" da rosca
+      const tiGradient = this.doughnutCtx.createLinearGradient(0, 0, 0, 300);
+      tiGradient.addColorStop(0, this.colorHexMap.cyan);
+      tiGradient.addColorStop(1, "#020617");
+
+      const simGradient = this.doughnutCtx.createLinearGradient(0, 0, 0, 300);
+      simGradient.addColorStop(0, this.colorHexMap.fuchsia);
+      simGradient.addColorStop(1, "#020617");
+
+      this.doughnutChart.data.datasets[0].backgroundColor = [
+        tiGradient,
+        "rgba(8, 145, 178, 0.05)",
+      ];
+      this.doughnutChart.data.datasets[1].backgroundColor = [
+        simGradient,
+        "rgba(192, 38, 211, 0.05)",
+      ];
+
+      const tiSub = this.subjects.find((s) => s.id === "ti");
+      const simSub = this.subjects.find((s) => s.id === "simulados");
+
+      if (tiSub) {
+        const tiCurrent = progress.ti || 0;
+        const tiRemaining = Math.max(0, tiSub.max - tiCurrent);
+        this.doughnutChart.data.datasets[0].data = [tiCurrent, tiRemaining];
+      }
+      if (simSub) {
+        const simCurrent = progress.simulados || 0;
+        const simRemaining = Math.max(0, simSub.max - simCurrent);
+        this.doughnutChart.data.datasets[1].data = [simCurrent, simRemaining];
+      }
+      this.doughnutChart.update();
     }
   }
 
-  downloadChart() {
+  downloadRadarChart() {
     if (!this.radarChart) return;
     const link = document.createElement("a");
     link.href = this.radarChart.toBase64Image();
@@ -207,11 +475,8 @@ export default class ChartManager {
     document.body.appendChild(link);
     link.click();
     link.remove();
-    if (window.App && window.App.ui) {
-      window.App.ui.showToast(
-        "Gráfico salvo como imagem com sucesso!",
-        "success",
-      );
+    if (this.ui) {
+      this.ui.showToast("Gráfico salvo como imagem com sucesso!", "success");
     }
   }
 }

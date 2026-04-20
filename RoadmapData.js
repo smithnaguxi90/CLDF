@@ -15,18 +15,6 @@ export const SPECIAL_MISSIONS = {
   },
 };
 
-export const COLORS_MAP = {
-  blue: "bg-blue-500",
-  teal: "bg-teal-500",
-  orange: "bg-orange-500",
-  emerald: "bg-emerald-500",
-  indigo: "bg-indigo-500",
-  violet: "bg-violet-500",
-  rose: "bg-rose-500",
-  cyan: "bg-cyan-500",
-  fuchsia: "bg-fuchsia-500",
-};
-
 export const SUBJECTS_QUEUE = [
   {
     id: "pt",

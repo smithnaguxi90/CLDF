@@ -26,10 +26,10 @@ export default class RoadmapView {
                     <div class="bg-${sub.color}-500 h-full rounded-full transition-all duration-500 ease-out" id="${sub.id}-bar" style="width: 0%"></div>
                 </div>
                 <div id="controls-${sub.id}" class="flex flex-wrap items-stretch gap-2 transition-all duration-300">
-                    <button data-action="update-subject" data-subject="${sub.id}" data-amount="-1" data-max="${sub.max}" class="min-w-[72px] flex-1 px-3 py-2.5 sm:flex-none sm:py-1.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded-lg text-xs font-bold transition-colors">-1</button>
-                    <button data-action="update-subject" data-subject="${sub.id}" data-amount="1" data-max="${sub.max}" class="min-w-[72px] flex-1 px-3 py-2.5 sm:flex-none sm:py-1.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded-lg text-xs font-bold transition-colors">+1</button>
-                    <button data-action="update-subject" data-subject="${sub.id}" data-amount="5" data-max="${sub.max}" class="min-w-[72px] sm:min-w-[96px] flex-1 px-4 py-2.5 sm:flex-none sm:py-1.5 bg-${sub.color}-500 hover:bg-${sub.color}-400 text-white rounded-lg text-xs font-bold transition-all active:scale-95 shadow-lg shadow-${sub.color}-500/30"><span class="sm:hidden">+5</span><span class="hidden sm:inline">+5 Aulas</span></button>
-                    <button data-action="complete-subject" data-subject="${sub.id}" data-name="${sub.name}" data-max="${sub.max}" class="w-full px-3 py-2.5 sm:ml-auto sm:w-auto sm:py-1.5 bg-slate-900 border border-slate-700 hover:bg-black text-slate-300 rounded-lg text-xs font-bold transition-colors"><span class="sm:hidden">Zerar</span><span class="hidden sm:inline">Zerar ✓</span></button>
+                    <button data-action="update-subject" data-subject="${sub.id}" data-amount="-1" data-max="${sub.max}" class="min-w-[72px] flex-1 px-3 py-2.5 sm:flex-none sm:py-1.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded-lg text-xs font-bold transition-all duration-150 shadow-[0_4px_0_#020617] active:shadow-[0_0_0_#020617] active:translate-y-[4px]">-1</button>
+                    <button data-action="update-subject" data-subject="${sub.id}" data-amount="1" data-max="${sub.max}" class="min-w-[72px] flex-1 px-3 py-2.5 sm:flex-none sm:py-1.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded-lg text-xs font-bold transition-all duration-150 shadow-[0_4px_0_#020617] active:shadow-[0_0_0_#020617] active:translate-y-[4px]">+1</button>
+                    <button data-action="update-subject" data-subject="${sub.id}" data-amount="5" data-max="${sub.max}" class="min-w-[72px] sm:min-w-[96px] flex-1 px-4 py-2.5 sm:flex-none sm:py-1.5 bg-${sub.color}-500 hover:bg-${sub.color}-400 text-white rounded-lg text-xs font-bold transition-all duration-150 shadow-[0_4px_0_#0f172a] active:shadow-[0_0_0_#0f172a] active:translate-y-[4px]"><span class="sm:hidden">+5</span><span class="hidden sm:inline">+5 Aulas</span></button>
+                    <button data-action="complete-subject" data-subject="${sub.id}" data-name="${sub.name}" data-max="${sub.max}" class="w-full px-3 py-2.5 sm:ml-auto sm:w-auto sm:py-1.5 bg-slate-900 border border-slate-700 hover:bg-black text-slate-300 rounded-lg text-xs font-bold transition-all duration-150 shadow-[0_4px_0_#020617] active:shadow-[0_0_0_#020617] active:translate-y-[4px]"><span class="sm:hidden">Zerar</span><span class="hidden sm:inline">Zerar ✓</span></button>
                 </div>
             </div>
           `;
@@ -139,6 +139,40 @@ export default class RoadmapView {
       document.getElementById("global-progress-percent").textContent =
         `${globalPercent}% (~${totalHours}h)`;
     }
+
+    // Atualiza os dados dentro do Modal de Estatísticas
+    const classesCurrent = totalProgress - simCurrent;
+    const classesMax = totalMax - simMax;
+    const totalMaxHours = classesMax + simMax * 4; // Aulas normais (1h) + Simulados (4h)
+    const remainingHours = Math.max(0, totalMaxHours - totalHours);
+    const remainingDays = Math.ceil(remainingHours / 2); // Ritmo de 2h/dia
+    const remainingMonths = Math.ceil(remainingDays / 30);
+
+    if (document.getElementById("stats-classes-completed")) {
+      document.getElementById("stats-classes-completed").textContent =
+        `${classesCurrent} / ${classesMax}`;
+    }
+    if (document.getElementById("stats-hours-completed")) {
+      document.getElementById("stats-hours-completed").textContent =
+        `${totalHours}h / ${totalMaxHours}h`;
+    }
+    if (document.getElementById("stats-simulados-completed")) {
+      document.getElementById("stats-simulados-completed").textContent =
+        `${simCurrent} / ${simMax}`;
+    }
+    if (document.getElementById("stats-days-remaining")) {
+      document.getElementById("stats-days-remaining").textContent =
+        `${remainingDays} dias (~${remainingMonths} meses)`;
+    }
+
+    const congratsMsg = document.getElementById("stats-congrats-message");
+    if (congratsMsg) {
+      if (remainingDays <= 0) {
+        congratsMsg.classList.remove("hidden");
+      } else {
+        congratsMsg.classList.add("hidden");
+      }
+    }
   }
 
   updatePhaseUI(currentPhase) {
@@ -182,9 +216,9 @@ export default class RoadmapView {
         box.className =
           "bg-slate-900/50 p-6 sm:p-8 rounded-3xl border-2 border-slate-800 border-dashed transition-all duration-500 relative overflow-hidden";
         if (trackersDiv) trackersDiv.classList.add("hidden");
-        badge.textContent = "Bloqueada";
+        badge.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg> Disponível em breve...`;
         badge.className =
-          "bg-slate-800 text-slate-400 border border-slate-700 text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-wider";
+          "bg-slate-800 text-slate-400 border border-slate-700 text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-wider inline-flex items-center gap-1";
       }
     };
 
@@ -213,8 +247,69 @@ export default class RoadmapView {
   }
 
   celebrateSubjectCompletion() {
+    // Efeito de Flash Verde na tela
+    const flash = document.createElement("div");
+    flash.className = "fixed inset-0 z-[9999] bg-emerald-500/40 pointer-events-none transition-opacity duration-500 opacity-100 mix-blend-screen";
+    document.body.appendChild(flash);
+    
+    // Força o navegador a renderizar o elemento antes de iniciar a transição de desaparecimento
+    void flash.offsetWidth; 
+    flash.classList.replace("opacity-100", "opacity-0");
+    setTimeout(() => flash.remove(), 500);
+
     if (window.confetti) {
-      confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+      const defaults = {
+        origin: { y: 0.7 },
+        shapes: ["star", "circle"],
+        colors: ["#FFD700", "#10b981", "#3b82f6", "#f97316", "#ec4899"],
+        ticks: 200,
+      };
+
+      // Sequência de 3 explosões simulando fogos de artifício
+      confetti({
+        ...defaults,
+        particleCount: 80,
+        spread: 100,
+        startVelocity: 40,
+      });
+      setTimeout(
+        () =>
+          confetti({
+            ...defaults,
+            particleCount: 60,
+            spread: 120,
+            startVelocity: 55,
+          }),
+        250,
+      );
+      setTimeout(
+        () =>
+          confetti({
+            ...defaults,
+            particleCount: 40,
+            spread: 80,
+            startVelocity: 30,
+          }),
+        500,
+      );
+    }
+
+    // Anima o indicador de Progresso Global no cabeçalho
+    const globalProgress = document.getElementById("global-progress-percent");
+    if (globalProgress) {
+      globalProgress.classList.add(
+        "scale-125",
+        "text-emerald-300",
+        "drop-shadow-[0_0_8px_#10b981]",
+      );
+      // Remove o destaque após 600ms para voltar ao normal suavemente
+      setTimeout(() => {
+        globalProgress.classList.remove(
+          "scale-125",
+          "text-emerald-300",
+          "drop-shadow-[0_0_8px_#10b981]",
+        );
+      }, 600);
     }
   }
 

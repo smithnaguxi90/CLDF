@@ -6,6 +6,76 @@ export default class UIManager {
     this.initScrollListener();
     this.initNetworkListeners();
   }
+
+  hideLoading() {
+    const overlay = document.getElementById("loading-overlay");
+    if (overlay) {
+      overlay.classList.add("opacity-0");
+      setTimeout(() => {
+        overlay.classList.add("hidden");
+        overlay.classList.remove("flex");
+      }, 500); // Tempo correspondente à duração da transição
+    }
+  }
+
+  showAuth() {
+    const authOverlay = document.getElementById("auth-overlay");
+    if (authOverlay) {
+      authOverlay.classList.remove("hidden");
+      authOverlay.classList.add("flex");
+    }
+  }
+
+  hideAuth() {
+    const authOverlay = document.getElementById("auth-overlay");
+    if (authOverlay) {
+      authOverlay.classList.add("hidden");
+      authOverlay.classList.remove("flex");
+    }
+  }
+
+  showSaving() {
+    const syncStatus = document.getElementById("sync-status");
+    if (syncStatus) {
+      syncStatus.classList.remove("hidden");
+      syncStatus.classList.add("flex");
+    }
+  }
+
+  hideSaving() {
+    const syncStatus = document.getElementById("sync-status");
+    if (syncStatus) {
+      syncStatus.classList.add("hidden");
+      syncStatus.classList.remove("flex");
+    }
+  }
+
+  openStatsModal() {
+    const modal = document.getElementById("stats-modal");
+    if (modal) {
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+      setTimeout(() => {
+        modal.classList.remove("opacity-0");
+        modal.firstElementChild.classList.remove("scale-95");
+        modal.firstElementChild.classList.add("scale-100");
+      }, 10); // Transição suave Tailwind
+    }
+  }
+
+  closeStatsModal() {
+    const modal = document.getElementById("stats-modal");
+    if (modal) {
+      modal.classList.add("opacity-0");
+      modal.firstElementChild.classList.remove("scale-100");
+      modal.firstElementChild.classList.add("scale-95");
+      setTimeout(() => {
+        modal.classList.add("hidden");
+        modal.classList.remove("flex");
+      }, 300); // Espera a animação terminar
+    }
+  }
+
   initScrollListener() {
     window.addEventListener("scroll", () => {
       if (!this.backToTopBtn) return;
@@ -133,6 +203,29 @@ export default class UIManager {
     }
   }
 
+  playPowerUpSound() {
+    try {
+      const ctx = this._initAudioCtx();
+      const oscillator = ctx.createOscillator();
+      const gainNode = ctx.createGain();
+
+      oscillator.type = "sine";
+      const now = ctx.currentTime;
+
+      // Efeito de "carregamento": a frequência sobe rapidamente de 200Hz para 800Hz
+      oscillator.frequency.setValueAtTime(200, now);
+      oscillator.frequency.exponentialRampToValueAtTime(800, now + 0.3);
+
+      gainNode.gain.setValueAtTime(0.1, now); // Volume um pouco mais destacado (10%)
+      gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.3); // Fade out suave em 300ms
+
+      oscillator.connect(gainNode);
+      gainNode.connect(ctx.destination);
+      oscillator.start(now);
+      oscillator.stop(now + 0.3);
+    } catch {}
+  }
+
   playSuccessSound() {
     try {
       const ctx = this._initAudioCtx();
@@ -155,6 +248,33 @@ export default class UIManager {
       gainNode.connect(ctx.destination);
       oscillator.start(now);
       oscillator.stop(now + 0.8);
+    } catch {}
+  }
+
+  playErrorSound() {
+    // Efeito visual de tremida (shake)
+    document.body.classList.add("animate-shake");
+    setTimeout(() => document.body.classList.remove("animate-shake"), 400);
+
+    try {
+      const ctx = this._initAudioCtx();
+      const oscillator = ctx.createOscillator();
+      const gainNode = ctx.createGain();
+
+      oscillator.type = "square"; // Som mais áspero para erro
+      const now = ctx.currentTime;
+
+      // Frequência baixa caindo rapidamente (150Hz -> 80Hz)
+      oscillator.frequency.setValueAtTime(150, now);
+      oscillator.frequency.exponentialRampToValueAtTime(80, now + 0.2);
+
+      gainNode.gain.setValueAtTime(0.05, now); // Volume contido (5%)
+      gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.2); // Curto e seco
+
+      oscillator.connect(gainNode);
+      gainNode.connect(ctx.destination);
+      oscillator.start(now);
+      oscillator.stop(now + 0.2);
     } catch {}
   }
 }

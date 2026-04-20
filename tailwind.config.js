@@ -22,6 +22,7 @@ export default {
           "toastEnter 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards",
         "toast-leave":
           "toastLeave 0.3s cubic-bezier(0.8, 0.2, 1, 0.2) forwards",
+        shake: "shake 0.4s cubic-bezier(.36,.07,.19,.97) both",
       },
       keyframes: {
         fadeIn: { "0%": { opacity: "0" }, "100%": { opacity: "1" } },
@@ -36,6 +37,12 @@ export default {
         toastLeave: {
           "0%": { opacity: "1", transform: "translateX(0)" },
           "100%": { opacity: "0", transform: "translateX(100%)" },
+        },
+        shake: {
+          "10%, 90%": { transform: "translate3d(-2px, 0, 0)" },
+          "20%, 80%": { transform: "translate3d(4px, 0, 0)" },
+          "30%, 50%, 70%": { transform: "translate3d(-6px, 0, 0)" },
+          "40%, 60%": { transform: "translate3d(6px, 0, 0)" },
         },
       },
     },
