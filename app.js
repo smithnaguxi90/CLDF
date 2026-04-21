@@ -138,6 +138,15 @@ export const App = {
   },
   setupEventListeners() {
     document.addEventListener("click", (e) => {
+      // Fechar menu mobile ao clicar fora dele
+      const mobileMenu = document.getElementById("mobile-menu");
+      if (mobileMenu && !mobileMenu.classList.contains("hidden")) {
+        if (!e.target.closest("[data-action='toggle-menu']")) {
+          mobileMenu.classList.add("hidden");
+          mobileMenu.classList.remove("flex");
+        }
+      }
+
       // Fechar modal de estatísticas ao clicar no fundo embaçado
       if (e.target.id === "stats-modal") {
         this.ui.closeStatsModal();
@@ -155,6 +164,12 @@ export const App = {
         this.ui.scrollTo(target.dataset.target);
       } else if (action === "switch-tab") {
         this.ui.switchTab(target.dataset.tab);
+      } else if (action === "toggle-menu") {
+        const menu = document.getElementById("mobile-menu");
+        if (menu) {
+          menu.classList.toggle("hidden");
+          menu.classList.toggle("flex");
+        }
       } else if (action === "export-data") {
         this.exportData();
       } else if (action === "factory-reset") {
