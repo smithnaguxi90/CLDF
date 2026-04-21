@@ -2,7 +2,10 @@
 <html lang="pt-BR" class="scroll-smooth overflow-x-hidden w-full">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
     <title>CLDF: Planejador Estratégico de Estudos Pro</title>
 
     <!-- SEO e Redes Sociais -->
@@ -32,6 +35,11 @@
 
     <!-- Bibliotecas Externas -->
     <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Plugin de DataLabels -->
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"
+    ></script>
     <!-- Confetti para celebração -->
     <script
       defer
@@ -319,327 +327,481 @@
 
     <!-- Wrapper Principal (Anti-Bug iOS Safari) -->
     <div class="relative w-full overflow-x-hidden flex flex-col min-h-screen">
-
-    <!-- Navegação Superior -->
-    <header
-      class="relative bg-slate-950/85 backdrop-blur-xl border-b border-slate-800/80 sticky top-0 z-50 transition-all duration-300 shadow-lg shadow-black/20 w-full"
-    >
-      <div
-        class="max-w-6xl mx-auto px-2 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-1 sm:gap-4"
+      <!-- Navegação Superior -->
+      <header
+        class="relative bg-slate-950/85 backdrop-blur-xl border-b border-slate-800/80 sticky top-0 z-50 transition-all duration-300 shadow-lg shadow-black/20 w-full"
       >
         <div
-          class="flex min-w-0 shrink-0 items-center gap-2.5 sm:gap-3 cursor-pointer"
-          data-action="scroll-top"
-        >
-          <img
-            src="pwa-192x192.png"
-            alt="Logo CLDF Pro"
-            width="40"
-            height="40"
-            class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl shadow-md shrink-0 ring-2 ring-emerald-100 object-cover"
-          />
-          <div class="min-w-0">
-            <h1
-              class="text-sm sm:text-lg font-bold text-white tracking-tight leading-none truncate"
-            >
-              CLDF <span class="text-emerald-600">Pro</span>
-            </h1>
-            <p
-              class="hidden sm:block text-[9px] sm:text-[10px] uppercase tracking-wider text-slate-500 font-bold mt-0.5 truncate"
-            >
-              Motor Dinâmico
-            </p>
-          </div>
-        </div>
-
-        <div
-          class="flex items-center gap-1 sm:gap-4 ml-auto"
+          class="max-w-6xl mx-auto px-2 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-1 sm:gap-4"
         >
           <div
-            class="hidden sm:flex items-center gap-2 border-r border-slate-800/60 pr-4 shrink-0"
+            class="flex min-w-0 shrink-0 items-center gap-2.5 sm:gap-3 cursor-pointer"
+            data-action="scroll-top"
           >
-            <button
-              data-action="open-stats"
-              class="hidden md:block text-center mr-2 p-2 hover:bg-slate-800 rounded-lg transition-colors cursor-pointer group"
-              title="Progresso total em todas as matérias do edital"
-            >
+            <img
+              src="pwa-192x192.png"
+              alt="Logo CLDF Pro"
+              width="40"
+              height="40"
+              class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl shadow-md shrink-0 ring-2 ring-emerald-100 object-cover"
+            />
+            <div class="min-w-0">
+              <h1
+                class="text-sm sm:text-lg font-bold text-white tracking-tight leading-none truncate"
+              >
+                CLDF <span class="text-emerald-600">Pro</span>
+              </h1>
               <p
-                class="text-[10px] uppercase text-slate-400 font-bold tracking-wider group-hover:text-emerald-400 transition-colors"
+                class="hidden sm:block text-[9px] sm:text-[10px] uppercase tracking-wider text-slate-500 font-bold mt-0.5 truncate"
               >
-                Progresso Global
+                Motor Dinâmico
               </p>
-              <p
-                class="text-sm text-emerald-400 font-bold transition-all duration-300 transform"
-                id="global-progress-percent"
-              >
-                0% (~0h)
-              </p>
-            </button>
-            <button
-              data-action="export-data"
-              class="p-2 shrink-0 text-slate-400 hover:text-emerald-400 hover:bg-slate-800/60 rounded-lg transition-colors group relative"
-              title="Exportar Backup"
-              aria-label="Exportar Backup de Dados"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                aria-hidden="true"
-              >
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                <polyline points="7 10 12 15 17 10"></polyline>
-                <line x1="12" y1="15" x2="12" y2="3"></line>
-              </svg>
-            </button>
-            <label
-              class="p-2 shrink-0 text-slate-400 hover:text-emerald-400 hover:bg-slate-800/60 rounded-lg transition-colors cursor-pointer"
-              title="Importar Backup"
-              aria-label="Importar Backup de Dados"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                aria-hidden="true"
-              >
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                <polyline points="17 8 12 3 7 8"></polyline>
-                <line x1="12" y1="3" x2="12" y2="15"></line>
-              </svg>
-              <input
-                type="file"
-                class="hidden"
-                accept=".json"
-                data-action="import-data"
-              />
-            </label>
-            <button
-              data-action="factory-reset"
-              class="p-2 shrink-0 text-slate-400 hover:text-rose-400 hover:bg-slate-800/60 rounded-lg transition-colors group relative"
-              title="Restaurar Padrão (Apagar Tudo)"
-              aria-label="Restaurar Padrão e Apagar Tudo"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                aria-hidden="true"
-              >
-                <polyline points="3 6 5 6 21 6"></polyline>
-                <path
-                  d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
-                ></path>
-                <line x1="10" y1="11" x2="10" y2="17"></line>
-                <line x1="14" y1="11" x2="14" y2="17"></line>
-              </svg>
-            </button>
-            <button
-              data-action="logout"
-              class="p-2 shrink-0 text-slate-400 hover:text-rose-400 hover:bg-slate-800/60 rounded-lg transition-colors group relative"
-              title="Sair"
-              aria-label="Sair da Conta"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                <polyline points="16 17 21 12 16 7"></polyline>
-                <line x1="21" y1="12" x2="9" y2="12"></line>
-              </svg>
-            </button>
+            </div>
           </div>
 
-          <!-- Menu Hamburguer (Mobile) -->
-          <div class="sm:hidden relative shrink-0 flex items-center pr-2 border-r border-slate-800/60 mr-1">
-            <button
-              data-action="toggle-menu"
-              class="p-1.5 text-slate-400 hover:text-emerald-400 hover:bg-slate-800/60 rounded-lg transition-colors focus:outline-none"
-              aria-label="Abrir Menu"
+          <div class="flex items-center gap-1 sm:gap-4 ml-auto">
+            <div
+              class="hidden sm:flex items-center gap-2 border-r border-slate-800/60 pr-4 shrink-0"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="3" y1="12" x2="21" y2="12"></line>
-                <line x1="3" y1="6" x2="21" y2="6"></line>
-                <line x1="3" y1="18" x2="21" y2="18"></line>
-              </svg>
-            </button>
-            
-            <!-- Dropdown -->
-            <div id="mobile-menu" class="hidden absolute top-full right-0 mt-4 w-56 bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl flex-col py-2 overflow-hidden z-[100] transform origin-top-right transition-all">
-              
-              <!-- Item: Estatísticas -->
-              <button data-action="open-stats" class="w-full flex items-center gap-3 px-4 py-3 text-sm text-slate-300 hover:bg-slate-800 hover:text-emerald-400 transition-colors text-left">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M12 20V10"></path><path d="M18 20V4"></path><path d="M6 20v-4"></path>
-                </svg>
-                <span class="font-medium">Progresso Global</span>
+              <button
+                data-action="open-stats"
+                class="hidden md:block text-center mr-2 p-2 hover:bg-slate-800 rounded-lg transition-colors cursor-pointer group"
+                title="Progresso total em todas as matérias do edital"
+              >
+                <p
+                  class="text-[10px] uppercase text-slate-400 font-bold tracking-wider group-hover:text-emerald-400 transition-colors"
+                >
+                  Progresso Global
+                </p>
+                <p
+                  class="text-sm text-emerald-400 font-bold transition-all duration-300 transform"
+                  id="global-progress-percent"
+                >
+                  0% (~0h)
+                </p>
               </button>
-              
-              <div class="h-px w-full bg-slate-800/80 my-1"></div>
-              
-              <!-- Item: Exportar -->
-              <button data-action="export-data" class="w-full flex items-center gap-3 px-4 py-3 text-sm text-slate-300 hover:bg-slate-800 hover:text-emerald-400 transition-colors text-left">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line>
+              <button
+                data-action="export-data"
+                class="p-2 shrink-0 text-slate-400 hover:text-emerald-400 hover:bg-slate-800/60 rounded-lg transition-colors group relative"
+                title="Exportar Backup"
+                aria-label="Exportar Backup de Dados"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
                 </svg>
-                <span class="font-medium">Exportar Dados</span>
               </button>
-              
-              <!-- Item: Importar -->
-              <label class="w-full flex items-center gap-3 px-4 py-3 text-sm text-slate-300 hover:bg-slate-800 hover:text-emerald-400 transition-colors cursor-pointer text-left">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line>
+              <label
+                class="p-2 shrink-0 text-slate-400 hover:text-emerald-400 hover:bg-slate-800/60 rounded-lg transition-colors cursor-pointer"
+                title="Importar Backup"
+                aria-label="Importar Backup de Dados"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="17 8 12 3 7 8"></polyline>
+                  <line x1="12" y1="3" x2="12" y2="15"></line>
                 </svg>
-                <span class="font-medium">Importar Dados</span>
-                <input type="file" class="hidden" accept=".json" data-action="import-data" />
+                <input
+                  type="file"
+                  class="hidden"
+                  accept=".json"
+                  data-action="import-data"
+                />
               </label>
-              
-              <div class="h-px w-full bg-slate-800/80 my-1"></div>
-              
-              <!-- Item: Apagar -->
-              <button data-action="factory-reset" class="w-full flex items-center gap-3 px-4 py-3 text-sm text-slate-300 hover:bg-slate-800 transition-colors text-left group">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 text-slate-400 group-hover:text-rose-400 transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <button
+                data-action="factory-reset"
+                class="p-2 shrink-0 text-slate-400 hover:text-rose-400 hover:bg-slate-800/60 rounded-lg transition-colors group relative"
+                title="Restaurar Padrão (Apagar Tudo)"
+                aria-label="Restaurar Padrão e Apagar Tudo"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
                   <polyline points="3 6 5 6 21 6"></polyline>
-                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                  <path
+                    d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+                  ></path>
                   <line x1="10" y1="11" x2="10" y2="17"></line>
                   <line x1="14" y1="11" x2="14" y2="17"></line>
                 </svg>
-                <span class="font-medium text-rose-400">Apagar Tudo</span>
               </button>
-              
-              <!-- Item: Sair -->
-              <button data-action="logout" class="w-full flex items-center gap-3 px-4 py-3 text-sm text-slate-300 hover:bg-slate-800 transition-colors text-left group">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0 text-slate-400 group-hover:text-rose-400 transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line>
-                </svg>
-                <span class="font-medium text-rose-400">Sair da Conta</span>
-              </button>
-              
-            </div>
-          </div>
-
-          <!-- Indicador de Salvamento Nuvem -->
-          <div
-            id="sync-status"
-            class="hidden items-center gap-1.5 px-2.5 py-1 bg-slate-800/80 rounded-full border border-slate-700/50 transition-all shrink-0"
-          >
-            <svg
-              class="animate-spin h-3 w-3 text-emerald-400"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                class="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                stroke-width="4"
-              ></circle>
-              <path
-                class="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
-            <span
-              class="text-[9px] uppercase font-bold text-slate-300 tracking-wider"
-              >Salvando...</span
-            >
-          </div>
-
-          <div
-          class="flex flex-col items-end shrink-0 pl-0 sm:pl-1"
-          >
-            <p
-              class="hidden sm:block text-[10px] uppercase text-slate-600 font-bold tracking-wider"
-            >
-              Fase Atual
-            </p>
-            <div
-              class="flex items-center gap-1 sm:gap-2 bg-slate-800 px-1.5 sm:px-2 py-1 rounded-full border border-slate-700"
-            >
-              <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              <p
-                class="text-[9px] sm:text-xs text-slate-200 font-semibold max-w-[55px] sm:max-w-none truncate"
-                id="header-phase-text"
+              <button
+                data-action="logout"
+                class="p-2 shrink-0 text-slate-400 hover:text-rose-400 hover:bg-slate-800/60 rounded-lg transition-colors group relative"
+                title="Sair"
+                aria-label="Sair da Conta"
               >
-                Processando...
-              </p>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                  <polyline points="16 17 21 12 16 7"></polyline>
+                  <line x1="21" y1="12" x2="9" y2="12"></line>
+                </svg>
+              </button>
             </div>
-          </div>
-        </div>
-      </div>
-    <!-- Barra de Progresso Global Integrada -->
-    <div class="absolute bottom-0 left-0 h-[2px] bg-gradient-to-r from-emerald-500 to-cyan-500 transition-all duration-700 ease-out z-50" id="header-progress-bar" style="width: 0%"></div>
-    </header>
 
-    <main
-      class="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-10 space-y-8 sm:space-y-12 flex-grow"
-    >
-      <!-- Seção Hero -->
-      <section class="animate-slide-up" style="animation-delay: 0.1s">
-        <div
-          class="bg-slate-900 text-white rounded-3xl p-6 sm:p-8 md:p-12 shadow-2xl relative overflow-hidden group"
-        >
-          <div
-            class="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full mix-blend-screen filter blur-[80px] opacity-40 -translate-y-1/4 translate-x-1/4 pointer-events-none"
-          ></div>
-          <div
-            class="absolute bottom-0 left-0 w-48 h-48 bg-teal-500 rounded-full mix-blend-screen filter blur-[60px] opacity-20 translate-y-1/4 -translate-x-1/4 pointer-events-none"
-          ></div>
-
-          <div class="relative z-10">
+            <!-- Menu Hamburguer (Mobile) -->
             <div
-              class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 sm:gap-8"
+              class="sm:hidden relative shrink-0 flex items-center pr-2 border-r border-slate-800/60 mr-1"
             >
-              <div class="max-w-2xl w-full">
-                <h2
-                  class="text-3xl sm:text-4xl font-extrabold mb-4 tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-300"
+              <button
+                data-action="toggle-menu"
+                class="p-1.5 text-slate-400 hover:text-emerald-400 hover:bg-slate-800/60 rounded-lg transition-colors focus:outline-none"
+                aria-label="Abrir Menu"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5 shrink-0"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
                 >
-                  Fases de Conquista (2h/dia)
-                </h2>
-                <p
-                  class="text-slate-300 text-base sm:text-lg leading-relaxed font-light"
-                >
-                  O sistema agora calcula automaticamente a sua rotação de
-                  disciplinas. Conclua uma matéria no
-                  <strong class="text-white">Mapa da Evolução</strong> abaixo e
-                  veja a próxima assumir o lugar no seu Planejador.
-                </p>
-              </div>
-              <div class="flex flex-wrap gap-3 w-full lg:w-auto">
+                  <line x1="3" y1="12" x2="21" y2="12"></line>
+                  <line x1="3" y1="6" x2="21" y2="6"></line>
+                  <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+              </button>
+
+              <!-- Dropdown -->
+              <div
+                id="mobile-menu"
+                class="hidden absolute top-full right-0 mt-4 w-56 bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl flex-col py-2 overflow-hidden z-[100] transform origin-top-right transition-all"
+              >
+                <!-- Item: Estatísticas -->
                 <button
-                  data-action="scroll-to"
-                  data-target="planner"
-                  class="w-full sm:flex-1 lg:flex-none bg-emerald-600 hover:bg-emerald-500 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 shadow-[0_0_20px_rgba(5,150,105,0.4)] active:scale-95 flex items-center justify-center gap-2 text-sm sm:text-base"
+                  data-action="open-stats"
+                  class="w-full flex items-center gap-3 px-4 py-3 text-sm text-slate-300 hover:bg-slate-800 hover:text-emerald-400 transition-colors text-left"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    class="h-5 w-5"
+                    class="h-5 w-5 shrink-0"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M12 20V10"></path>
+                    <path d="M18 20V4"></path>
+                    <path d="M6 20v-4"></path>
+                  </svg>
+                  <span class="font-medium">Progresso Global</span>
+                </button>
+
+                <div class="h-px w-full bg-slate-800/80 my-1"></div>
+
+                <!-- Item: Exportar -->
+                <button
+                  data-action="export-data"
+                  class="w-full flex items-center gap-3 px-4 py-3 text-sm text-slate-300 hover:bg-slate-800 hover:text-emerald-400 transition-colors text-left"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5 shrink-0"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                  </svg>
+                  <span class="font-medium">Exportar Dados</span>
+                </button>
+
+                <!-- Item: Importar -->
+                <label
+                  class="w-full flex items-center gap-3 px-4 py-3 text-sm text-slate-300 hover:bg-slate-800 hover:text-emerald-400 transition-colors cursor-pointer text-left"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5 shrink-0"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                  </svg>
+                  <span class="font-medium">Importar Dados</span>
+                  <input
+                    type="file"
+                    class="hidden"
+                    accept=".json"
+                    data-action="import-data"
+                  />
+                </label>
+
+                <div class="h-px w-full bg-slate-800/80 my-1"></div>
+
+                <!-- Item: Apagar -->
+                <button
+                  data-action="factory-reset"
+                  class="w-full flex items-center gap-3 px-4 py-3 text-sm text-slate-300 hover:bg-slate-800 transition-colors text-left group"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5 shrink-0 text-slate-400 group-hover:text-rose-400 transition-colors"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path
+                      d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+                    ></path>
+                    <line x1="10" y1="11" x2="10" y2="17"></line>
+                    <line x1="14" y1="11" x2="14" y2="17"></line>
+                  </svg>
+                  <span class="font-medium text-rose-400">Apagar Tudo</span>
+                </button>
+
+                <!-- Item: Sair -->
+                <button
+                  data-action="logout"
+                  class="w-full flex items-center gap-3 px-4 py-3 text-sm text-slate-300 hover:bg-slate-800 transition-colors text-left group"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5 shrink-0 text-slate-400 group-hover:text-rose-400 transition-colors"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                    <polyline points="16 17 21 12 16 7"></polyline>
+                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                  </svg>
+                  <span class="font-medium text-rose-400">Sair da Conta</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Indicador de Salvamento Nuvem -->
+            <div
+              id="sync-status"
+              class="hidden items-center gap-1.5 px-2.5 py-1 bg-slate-800/80 rounded-full border border-slate-700/50 transition-all shrink-0"
+            >
+              <svg
+                class="animate-spin h-3 w-3 text-emerald-400"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+              <span
+                class="text-[9px] uppercase font-bold text-slate-300 tracking-wider"
+                >Salvando...</span
+              >
+            </div>
+
+            <div class="flex flex-col items-end shrink-0 pl-0 sm:pl-1">
+              <p
+                class="hidden sm:block text-[10px] uppercase text-slate-600 font-bold tracking-wider"
+              >
+                Fase Atual
+              </p>
+              <div
+                class="flex items-center gap-1 sm:gap-2 bg-slate-800 px-1.5 sm:px-2 py-1 rounded-full border border-slate-700"
+              >
+                <span
+                  class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-500 animate-pulse"
+                ></span>
+                <p
+                  class="text-[9px] sm:text-xs text-slate-200 font-semibold max-w-[55px] sm:max-w-none truncate"
+                  id="header-phase-text"
+                >
+                  Processando...
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Barra de Progresso Global Integrada -->
+        <div
+          class="absolute bottom-0 left-0 h-[2px] bg-gradient-to-r from-emerald-500 to-cyan-500 transition-all duration-700 ease-out z-50"
+          id="header-progress-bar"
+          style="width: 0%"
+        ></div>
+      </header>
+
+      <main
+        class="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-10 space-y-8 sm:space-y-12 flex-grow"
+      >
+        <!-- Seção Hero -->
+        <section class="animate-slide-up" style="animation-delay: 0.1s">
+          <div
+            class="bg-slate-900 text-white rounded-3xl p-5 sm:p-8 md:p-12 shadow-2xl relative overflow-hidden group"
+          >
+            <div
+              class="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full mix-blend-screen filter blur-[80px] opacity-40 -translate-y-1/4 translate-x-1/4 pointer-events-none"
+            ></div>
+            <div
+              class="absolute bottom-0 left-0 w-48 h-48 bg-teal-500 rounded-full mix-blend-screen filter blur-[60px] opacity-20 translate-y-1/4 -translate-x-1/4 pointer-events-none"
+            ></div>
+
+            <div class="relative z-10">
+              <div
+                class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 sm:gap-8"
+              >
+                <div class="max-w-2xl w-full">
+                  <h2
+                    class="text-3xl sm:text-4xl font-extrabold mb-4 tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-300"
+                  >
+                    Fases de Conquista (2h/dia)
+                  </h2>
+                  <p
+                    class="text-slate-300 text-base sm:text-lg leading-relaxed font-light"
+                  >
+                    O sistema agora calcula automaticamente a sua rotação de
+                    disciplinas. Conclua uma matéria no
+                    <strong class="text-white">Mapa da Evolução</strong> abaixo
+                    e veja a próxima assumir o lugar no seu Planejador.
+                  </p>
+                </div>
+                <div class="flex flex-wrap gap-3 w-full lg:w-auto">
+                  <button
+                    data-action="scroll-to"
+                    data-target="planner"
+                    class="w-full sm:flex-1 lg:flex-none bg-emerald-600 hover:bg-emerald-500 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 shadow-[0_0_20px_rgba(5,150,105,0.4)] active:scale-95 flex items-center justify-center gap-2 text-sm sm:text-base"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-5 w-5"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        x="3"
+                        y="4"
+                        width="18"
+                        height="18"
+                        rx="2"
+                        ry="2"
+                      ></rect>
+                      <line x1="16" y1="2" x2="16" y2="6"></line>
+                      <line x1="8" y1="2" x2="8" y2="6"></line>
+                      <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                    <span>Ver Ciclo Atual</span>
+                  </button>
+                  <button
+                    data-action="scroll-to"
+                    data-target="roadmap"
+                    class="w-full sm:flex-1 lg:flex-none bg-white/10 hover:bg-white/20 text-white backdrop-blur-sm border border-white/20 px-6 py-3 rounded-xl font-semibold transition-all duration-300 active:scale-95 flex items-center justify-center gap-2 text-sm sm:text-base"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-5 w-5"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                      <polyline points="2 17 12 22 22 17"></polyline>
+                      <polyline points="2 12 12 17 22 12"></polyline>
+                    </svg>
+                    <span>Registrar Progresso</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Planejador Interativo -->
+        <section
+          id="planner"
+          class="scroll-mt-24 animate-slide-up"
+          style="animation-delay: 0.3s"
+        >
+          <div
+            class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"
+          >
+            <div>
+              <h3
+                class="text-2xl font-bold text-white flex items-center gap-3 tracking-tight"
+              >
+                <div
+                  class="bg-emerald-500/20 p-2 rounded-lg text-emerald-400 animate-pulse-slow"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-6 w-6"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
@@ -659,51 +821,491 @@
                     <line x1="8" y1="2" x2="8" y2="6"></line>
                     <line x1="3" y1="10" x2="21" y2="10"></line>
                   </svg>
-                  <span>Ver Ciclo Atual</span>
-                </button>
-                <button
-                  data-action="scroll-to"
-                  data-target="roadmap"
-                  class="w-full sm:flex-1 lg:flex-none bg-white/10 hover:bg-white/20 text-white backdrop-blur-sm border border-white/20 px-6 py-3 rounded-xl font-semibold transition-all duration-300 active:scale-95 flex items-center justify-center gap-2 text-sm sm:text-base"
+                </div>
+                Planejador & Motor Dinâmico
+              </h3>
+            </div>
+          </div>
+
+          <div
+            class="bg-slate-900 rounded-3xl shadow-2xl border border-slate-800 overflow-hidden"
+          >
+            <!-- Abas -->
+            <div
+            class="grid grid-cols-1 gap-2 border-b border-slate-800 bg-slate-950/50 p-2 sm:grid-cols-3 w-full"
+            >
+              <button
+              class="w-full min-w-0 rounded-xl border border-emerald-200 bg-white px-4 py-3 sm:py-4 text-center text-sm font-bold leading-tight text-emerald-700 shadow-sm transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/40 sm:text-base"
+                id="tab-cycle-a"
+                data-action="switch-tab"
+                data-tab="cycle-a"
+              >
+                SEG A SEX (Rotação)
+              </button>
+              <button
+              class="w-full min-w-0 rounded-xl border border-transparent px-4 py-3 sm:py-4 text-center text-sm font-medium leading-tight text-slate-500 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/40 hover:bg-white/70 hover:text-slate-700 sm:text-base"
+                id="tab-cycle-b"
+                data-action="switch-tab"
+                data-tab="cycle-b"
+              >
+                SÁBADO (Imersão TI)
+              </button>
+              <button
+              class="w-full min-w-0 rounded-xl border border-transparent px-4 py-3 sm:py-4 text-center text-sm font-medium leading-tight text-slate-500 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/40 hover:bg-white/70 hover:text-slate-700 sm:text-base"
+                id="tab-cycle-c"
+                data-action="switch-tab"
+                data-tab="cycle-c"
+              >
+                DOMINGO (Revisão)
+              </button>
+            </div>
+
+            <div
+              class="relative min-h-[300px] p-3 sm:min-h-[320px] sm:p-8 md:p-10"
+            >
+              <!-- Conteúdo: Seg a Sex -->
+              <div id="content-cycle-a" class="animate-fade-in block">
+                <div
+                  class="mb-5 sm:mb-8 bg-gradient-to-r from-slate-800 to-blue-900/20 border border-blue-800/50 rounded-2xl p-4 sm:p-6 shadow-sm relative overflow-hidden"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-5 w-5"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                  <div
+                    class="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-blue-900/40 to-transparent pointer-events-none"
+                  ></div>
+                  <div class="flex items-center gap-3 mb-4">
+                    <div
+                      class="bg-blue-600 text-white p-2 rounded-lg shadow-sm"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-5 w-5"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <path
+                          d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"
+                        ></path>
+                        <path
+                          d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"
+                        ></path>
+                      </svg>
+                    </div>
+                    <div>
+                      <h4 class="font-bold text-white text-lg tracking-tight">
+                        Fila de Matérias (Gran Cursos)
+                      </h4>
+                      <p class="text-xs font-medium text-slate-500 mt-0.5">
+                        O sistema projeta as matérias para estudar hoje.
+                        Configure o Gran
+                        <strong class="text-emerald-600">APENAS</strong> com
+                        estas disciplinas:
+                      </p>
+                    </div>
+                  </div>
+
+                  <div
+                    id="dynamic-cycle-list"
+                    class="flex flex-wrap gap-3"
+                  ></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-8">
+                  <div
+                    class="bg-slate-800 p-4 sm:p-6 rounded-2xl border-l-4 border-blue-500 hover:bg-slate-700/50 transition-colors"
                   >
-                    <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
-                    <polyline points="2 17 12 22 22 17"></polyline>
-                    <polyline points="2 12 12 17 22 12"></polyline>
-                  </svg>
-                  <span>Registrar Progresso</span>
-                </button>
+                    <h4 class="text-lg sm:text-xl font-bold text-white mb-1">
+                      Bloco 1 (55 Minutos)
+                    </h4>
+                    <p
+                      class="text-xs text-blue-600 mb-5 uppercase tracking-wider font-bold"
+                    >
+                      1ª Sugestão da Plataforma
+                    </p>
+                    <ul class="space-y-4">
+                      <li class="flex items-start gap-3 text-sm text-slate-300">
+                        <div
+                          class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-500/10 text-blue-400 flex items-center justify-center border border-blue-500/20"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-4 w-4"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          >
+                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                          </svg>
+                        </div>
+                        <span class="mt-1.5 leading-tight"
+                          >Estudo Teórico (Vídeo Acelerado ou PDF) -
+                          <strong class="text-slate-900 font-bold"
+                            ><strong class="text-white font-bold"
+                              >40 min</strong
+                            ></strong
+                          ></span
+                        >
+                      </li>
+                      <li class="flex items-start gap-3 text-sm text-slate-300">
+                        <div
+                          class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-500/10 text-blue-400 flex items-center justify-center border border-blue-500/20"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-4 w-4"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          >
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                          </svg>
+                        </div>
+                        <span class="mt-1.5 leading-tight"
+                          >Resolução de Questões (Assunto Atual) -
+                          <strong class="text-slate-900 font-bold"
+                            ><strong class="text-white font-bold"
+                              >15 min</strong
+                            ></strong
+                          ></span
+                        >
+                      </li>
+                    </ul>
+                  </div>
+                  <div
+                    class="bg-slate-800 p-4 sm:p-6 rounded-2xl border-l-4 border-teal-500 hover:bg-slate-700/50 transition-colors"
+                  >
+                    <h4 class="text-lg sm:text-xl font-bold text-white mb-1">
+                      Bloco 2 (55 Minutos)
+                    </h4>
+                    <p
+                      class="text-xs text-teal-600 mb-5 uppercase tracking-wider font-bold"
+                    >
+                      2ª Sugestão da Plataforma
+                    </p>
+                    <ul class="space-y-4">
+                      <li class="flex items-start gap-3 text-sm text-slate-300">
+                        <div
+                          class="flex-shrink-0 w-8 h-8 rounded-full bg-teal-500/10 text-teal-400 flex items-center justify-center border border-teal-500/20"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-4 w-4"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          >
+                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                          </svg>
+                        </div>
+                        <span class="mt-1.5 leading-tight"
+                          >Estudo Teórico (Vídeo Acelerado ou PDF) -
+                          <strong class="text-slate-900 font-bold"
+                            ><strong class="text-white font-bold"
+                              >40 min</strong
+                            ></strong
+                          ></span
+                        >
+                      </li>
+                      <li class="flex items-start gap-3 text-sm text-slate-300">
+                        <div
+                          class="flex-shrink-0 w-8 h-8 rounded-full bg-teal-500/10 text-teal-400 flex items-center justify-center border border-teal-500/20"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-4 w-4"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          >
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                          </svg>
+                        </div>
+                        <span class="mt-1.5 leading-tight"
+                          >Resolução de Questões (Assunto Atual) -
+                          <strong class="text-slate-900 font-bold"
+                            ><strong class="text-white font-bold"
+                              >15 min</strong
+                            ></strong
+                          ></span
+                        >
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Conteúdo: Sábado -->
+              <div id="content-cycle-b" class="animate-fade-in hidden">
+                <div
+                  class="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-rose-500/10 p-4 rounded-xl border border-rose-500/20"
+                >
+                  <span
+                    class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold bg-rose-500/20 text-rose-300 w-fit"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-4 w-4"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <polygon
+                        points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"
+                      ></polygon>
+                    </svg>
+                    Imersão em Sistemas
+                  </span>
+                  <span
+                    class="text-sm text-slate-500 font-medium flex items-center gap-2"
+                  >
+                    Exclusivo ao Sábado (Registre no final da página)
+                  </span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-8">
+                  <div
+                    class="bg-gradient-to-br from-slate-800 to-rose-900/20 p-4 sm:p-6 rounded-2xl border-l-4 border-rose-500 hover:bg-slate-700/50 transition-colors relative overflow-hidden"
+                  >
+                    <h4
+                      class="text-lg sm:text-xl font-bold text-white mb-1 relative z-10"
+                    >
+                      Bloco 1 e 2: Específicas
+                    </h4>
+                    <p
+                      class="text-xs text-rose-600 mb-5 uppercase tracking-wider font-bold relative z-10"
+                    >
+                      Compensação de Carga
+                    </p>
+                    <p
+                      class="text-sm text-slate-300 font-medium leading-relaxed"
+                    >
+                      Hoje você ignora o sistema automático. Abra a disciplina
+                      de
+                      <strong>Conhecimentos Específicos</strong> e estude 2
+                      horas focadas apenas nisso para dominar o edital de TI.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Conteúdo: Domingo -->
+              <div id="content-cycle-c" class="animate-fade-in hidden">
+                <div
+                  class="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-violet-500/10 p-4 rounded-xl border border-violet-500/20"
+                >
+                  <span
+                    class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold bg-violet-500/20 text-violet-300 w-fit"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-4 w-4"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M21 2v6h-6"></path>
+                      <path
+                        d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"
+                      ></path>
+                      <path d="M3 3v5h5"></path>
+                    </svg>
+                    Revisão Espaçada
+                  </span>
+                  <span
+                    class="text-sm text-slate-500 font-medium flex items-center gap-2"
+                  >
+                    Consolidação de Memória
+                  </span>
+                </div>
+
+                <div class="grid grid-cols-1 gap-6 sm:gap-8">
+                  <div
+                    class="bg-gradient-to-br from-slate-800 to-violet-900/20 p-4 sm:p-6 rounded-2xl border-l-4 border-violet-500 hover:bg-slate-700/50 transition-colors relative overflow-hidden"
+                  >
+                    <h4
+                      class="text-lg sm:text-xl font-bold text-white mb-1 relative z-10"
+                    >
+                      Fixação e Testes
+                    </h4>
+                    <p
+                      class="text-xs text-violet-600 mb-5 uppercase tracking-wider font-bold relative z-10"
+                    >
+                      Anki & Simulados
+                    </p>
+                    <div class="space-y-4">
+                      <p
+                        class="text-sm text-slate-300 font-medium leading-relaxed"
+                      >
+                        O domingo é reservado para a manutenção do seu
+                        conhecimento. Não avance em matérias novas. O foco é
+                        100% na consolidação da memória de longo prazo.
+                      </p>
+                      <ul class="space-y-3 mt-4">
+                        <li
+                          class="flex items-start gap-3 text-sm text-slate-300"
+                        >
+                          <div
+                            class="flex-shrink-0 w-6 h-6 rounded-full bg-violet-500/20 text-violet-400 flex items-center justify-center mt-0.5"
+                          >
+                            <span class="font-bold text-xs">1</span>
+                          </div>
+                          <span
+                            ><strong>Revisão Ativa (Flashcards/Anki):</strong>
+                            Revise os cartões acumulados durante a semana para
+                            fortalecer as conexões neurais.</span
+                          >
+                        </li>
+                        <li
+                          class="flex items-start gap-3 text-sm text-slate-300"
+                        >
+                          <div
+                            class="flex-shrink-0 w-6 h-6 rounded-full bg-violet-500/20 text-violet-400 flex items-center justify-center mt-0.5"
+                          >
+                            <span class="font-bold text-xs">2</span>
+                          </div>
+                          <span
+                            ><strong>Simulados / Caderno de Erros:</strong>
+                            Realize baterias de questões focadas nas matérias da
+                            Fase Atual e analise profundamente os erros.</span
+                          >
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <!-- Planejador Interativo -->
-      <section
-        id="planner"
-        class="scroll-mt-24 animate-slide-up"
-        style="animation-delay: 0.3s"
-      >
-        <div
-          class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"
+        <!-- Gráfico de Inteligência -->
+        <section
+          id="intelligence-chart"
+          class="animate-slide-up"
+          style="animation-delay: 0.4s"
         >
-          <div>
-            <h3
-              class="text-2xl font-bold text-white flex items-center gap-3 tracking-tight"
+          <div
+            class="bg-slate-900 rounded-3xl shadow-2xl border border-slate-800 p-4 sm:p-8"
+          >
+            <div
+              class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4"
             >
-              <div
-                class="bg-emerald-500/20 p-2 rounded-lg text-emerald-400 animate-pulse-slow"
+              <h3
+                class="text-2xl font-bold text-white flex items-center gap-3 tracking-tight"
               >
+                <div class="bg-violet-500/20 p-2 rounded-lg text-violet-400">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-6 w-6"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M12 12m-2 0a2 2 0 1 0 4 0 2 2 0 1 0-4 0" />
+                    <path d="M12 12m-7 0a7 7 0 1 0 14 0 7 7 0 1 0-14 0" />
+                    <path d="M12 2v2" />
+                    <path d="M12 20v2" />
+                    <path d="m4.93 4.93 1.41 1.41" />
+                    <path d="m17.66 17.66 1.41 1.41" />
+                    <path d="M2 12h2" />
+                    <path d="M20 12h2" />
+                    <path d="m4.93 19.07 1.41-1.41" />
+                    <path d="m17.66 6.34 1.41-1.41" />
+                  </svg>
+                </div>
+                Desempenho & Inteligência Real
+              </h3>
+              <button
+                data-action="download-chart"
+                class="flex w-full sm:w-auto items-center justify-center gap-2 text-xs sm:text-sm font-semibold text-slate-300 hover:text-violet-400 transition-colors bg-slate-800 border border-slate-700 hover:border-violet-500/50 px-3 py-2 rounded-lg shadow-sm"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-4 w-4 shrink-0"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                Salvar Radar
+              </button>
+            </div>
+            <p class="text-sm text-slate-500 mb-6">
+              Visão geral do seu avanço. O gráfico de
+              <strong>Radar</strong> foca no equilíbrio (%), o de
+              <strong>Barras</strong> no volume real de aulas e a
+              <strong>Rosca Dupla</strong> nas Missões Especiais.
+            </p>
+            <div class="flex flex-col gap-12 mt-8">
+              <div
+                class="chart-container w-full max-w-full max-w-xl mx-auto bg-slate-800/30 p-2 sm:p-6 rounded-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.6)] transition-all duration-500 hover:shadow-violet-500/20 hover:transform-none cursor-pointer sm:[transform:perspective(1200px)_rotateX(15deg)_rotateY(-10deg)_translateZ(20px)]"
+              >
+                <div
+                  class="relative w-full h-[240px] sm:h-[400px] overflow-hidden"
+                >
+                  <canvas id="radarChart"></canvas>
+                </div>
+              </div>
+              <div
+                class="chart-container w-full max-w-full bg-slate-800/30 p-2 sm:p-6 rounded-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.6)] transition-all duration-500 hover:shadow-violet-500/20 hover:transform-none cursor-pointer sm:[transform:perspective(1200px)_rotateX(15deg)_rotateY(10deg)_translateZ(20px)]"
+              >
+              <div class="relative w-full h-[260px] sm:h-[400px] overflow-hidden">
+                <canvas id="barChart"></canvas>
+              </div>
+              </div>
+              <div
+                class="chart-container w-full max-w-full max-w-xl mx-auto bg-slate-800/30 p-2 sm:p-6 rounded-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.6)] transition-all duration-500 hover:shadow-violet-500/20 hover:transform-none cursor-pointer sm:[transform:perspective(1200px)_rotateX(15deg)_rotateY(-5deg)_translateZ(20px)]"
+              >
+                <div
+                  class="relative w-full h-[240px] sm:h-[400px] overflow-hidden"
+                >
+                  <canvas id="doughnutChart"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Mapa da Evolução -->
+        <section
+          id="roadmap"
+          class="scroll-mt-24 animate-slide-up"
+          style="animation-delay: 0.6s"
+        >
+          <div
+            class="mb-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+          >
+            <div class="flex items-center gap-3">
+              <div class="bg-emerald-500/20 p-2.5 rounded-xl text-emerald-400">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   class="h-6 w-6"
@@ -714,419 +1316,19 @@
                   stroke-linecap="round"
                   stroke-linejoin="round"
                 >
-                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                  <line x1="16" y1="2" x2="16" y2="6"></line>
-                  <line x1="8" y1="2" x2="8" y2="6"></line>
-                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                  <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
                 </svg>
               </div>
-              Planejador & Motor Dinâmico
-            </h3>
-          </div>
-        </div>
-
-        <div
-          class="bg-slate-900 rounded-3xl shadow-2xl border border-slate-800 overflow-hidden"
-        >
-          <!-- Abas -->
-          <div
-            class="flex overflow-x-auto overscroll-x-contain touch-pan-x gap-2 border-b border-slate-800 bg-slate-950/50 p-2 sm:grid sm:grid-cols-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-          >
-            <button
-              class="shrink-0 whitespace-nowrap w-[80%] sm:w-full rounded-xl border border-emerald-200 bg-white px-4 py-4 text-center text-sm font-bold leading-tight text-emerald-700 shadow-sm transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/40 sm:text-base"
-              id="tab-cycle-a"
-              data-action="switch-tab"
-              data-tab="cycle-a"
-            >
-              SEG A SEX (Rotação)
-            </button>
-            <button
-              class="shrink-0 whitespace-nowrap w-[80%] sm:w-full rounded-xl border border-transparent px-4 py-4 text-center text-sm font-medium leading-tight text-slate-500 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/40 hover:bg-white/70 hover:text-slate-700 sm:text-base"
-              id="tab-cycle-b"
-              data-action="switch-tab"
-              data-tab="cycle-b"
-            >
-              SÁBADO (Imersão TI)
-            </button>
-            <button
-              class="shrink-0 whitespace-nowrap w-[80%] sm:w-full rounded-xl border border-transparent px-4 py-4 text-center text-sm font-medium leading-tight text-slate-500 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/40 hover:bg-white/70 hover:text-slate-700 sm:text-base"
-              id="tab-cycle-c"
-              data-action="switch-tab"
-              data-tab="cycle-c"
-            >
-              DOMINGO (Revisão)
-            </button>
-          </div>
-
-          <div
-            class="relative min-h-[300px] p-5 sm:min-h-[320px] sm:p-8 md:p-10"
-          >
-            <!-- Conteúdo: Seg a Sex -->
-            <div id="content-cycle-a" class="animate-fade-in block">
-              <div
-                class="mb-6 sm:mb-8 bg-gradient-to-r from-slate-800 to-blue-900/20 border border-blue-800/50 rounded-2xl p-5 sm:p-6 shadow-sm relative overflow-hidden"
-              >
-                <div
-                  class="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-blue-900/40 to-transparent pointer-events-none"
-                ></div>
-                <div class="flex items-center gap-3 mb-4">
-                  <div class="bg-blue-600 text-white p-2 rounded-lg shadow-sm">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-5 w-5"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-                      <path
-                        d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"
-                      ></path>
-                    </svg>
-                  </div>
-                  <div>
-                    <h4 class="font-bold text-white text-lg tracking-tight">
-                      Fila de Matérias (Gran Cursos)
-                    </h4>
-                    <p class="text-xs font-medium text-slate-500 mt-0.5">
-                      O sistema projeta as matérias para estudar hoje. Configure
-                      o Gran
-                      <strong class="text-emerald-600">APENAS</strong> com estas
-                      disciplinas:
-                    </p>
-                  </div>
-                </div>
-
-                <div id="dynamic-cycle-list" class="flex flex-wrap gap-3"></div>
-              </div>
-
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-8">
-                <div
-                  class="bg-slate-800 p-5 sm:p-6 rounded-2xl border-l-4 border-blue-500 hover:bg-slate-700/50 transition-colors"
-                >
-                  <h4 class="text-lg sm:text-xl font-bold text-white mb-1">
-                    Bloco 1 (55 Minutos)
-                  </h4>
-                  <p
-                    class="text-xs text-blue-600 mb-5 uppercase tracking-wider font-bold"
-                  >
-                    1ª Sugestão da Plataforma
-                  </p>
-                  <ul class="space-y-4">
-                    <li class="flex items-start gap-3 text-sm text-slate-300">
-                      <div
-                        class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-500/10 text-blue-400 flex items-center justify-center border border-blue-500/20"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          class="h-4 w-4"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2.5"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        >
-                          <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                        </svg>
-                      </div>
-                      <span class="mt-1.5 leading-tight"
-                        >Estudo Teórico (Vídeo Acelerado ou PDF) -
-                        <strong class="text-slate-900 font-bold"
-                          ><strong class="text-white font-bold"
-                            >40 min</strong
-                          ></strong
-                        ></span
-                      >
-                    </li>
-                    <li class="flex items-start gap-3 text-sm text-slate-300">
-                      <div
-                        class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-500/10 text-blue-400 flex items-center justify-center border border-blue-500/20"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          class="h-4 w-4"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2.5"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        >
-                          <polyline points="20 6 9 17 4 12"></polyline>
-                        </svg>
-                      </div>
-                      <span class="mt-1.5 leading-tight"
-                        >Resolução de Questões (Assunto Atual) -
-                        <strong class="text-slate-900 font-bold"
-                          ><strong class="text-white font-bold"
-                            >15 min</strong
-                          ></strong
-                        ></span
-                      >
-                    </li>
-                  </ul>
-                </div>
-                <div
-                  class="bg-slate-800 p-5 sm:p-6 rounded-2xl border-l-4 border-teal-500 hover:bg-slate-700/50 transition-colors"
-                >
-                  <h4 class="text-lg sm:text-xl font-bold text-white mb-1">
-                    Bloco 2 (55 Minutos)
-                  </h4>
-                  <p
-                    class="text-xs text-teal-600 mb-5 uppercase tracking-wider font-bold"
-                  >
-                    2ª Sugestão da Plataforma
-                  </p>
-                  <ul class="space-y-4">
-                    <li class="flex items-start gap-3 text-sm text-slate-300">
-                      <div
-                        class="flex-shrink-0 w-8 h-8 rounded-full bg-teal-500/10 text-teal-400 flex items-center justify-center border border-teal-500/20"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          class="h-4 w-4"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2.5"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        >
-                          <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                        </svg>
-                      </div>
-                      <span class="mt-1.5 leading-tight"
-                        >Estudo Teórico (Vídeo Acelerado ou PDF) -
-                        <strong class="text-slate-900 font-bold"
-                          ><strong class="text-white font-bold"
-                            >40 min</strong
-                          ></strong
-                        ></span
-                      >
-                    </li>
-                    <li class="flex items-start gap-3 text-sm text-slate-300">
-                      <div
-                        class="flex-shrink-0 w-8 h-8 rounded-full bg-teal-500/10 text-teal-400 flex items-center justify-center border border-teal-500/20"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          class="h-4 w-4"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2.5"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        >
-                          <polyline points="20 6 9 17 4 12"></polyline>
-                        </svg>
-                      </div>
-                      <span class="mt-1.5 leading-tight"
-                        >Resolução de Questões (Assunto Atual) -
-                        <strong class="text-slate-900 font-bold"
-                          ><strong class="text-white font-bold"
-                            >15 min</strong
-                          ></strong
-                        ></span
-                      >
-                    </li>
-                  </ul>
-                </div>
-              </div>
+              <h3 class="text-2xl font-extrabold text-white tracking-tight">
+                Mapa da Evolução (Trackers)
+              </h3>
             </div>
-
-            <!-- Conteúdo: Sábado -->
-            <div id="content-cycle-b" class="animate-fade-in hidden">
-              <div
-                class="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-rose-500/10 p-4 rounded-xl border border-rose-500/20"
-              >
-                <span
-                  class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold bg-rose-500/20 text-rose-300 w-fit"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-4 w-4"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <polygon
-                      points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"
-                    ></polygon>
-                  </svg>
-                  Imersão em Sistemas
-                </span>
-                <span
-                  class="text-sm text-slate-500 font-medium flex items-center gap-2"
-                >
-                  Exclusivo ao Sábado (Registre no final da página)
-                </span>
-              </div>
-
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-8">
-                <div
-                  class="bg-gradient-to-br from-slate-800 to-rose-900/20 p-5 sm:p-6 rounded-2xl border-l-4 border-rose-500 hover:bg-slate-700/50 transition-colors relative overflow-hidden"
-                >
-                  <h4
-                    class="text-lg sm:text-xl font-bold text-white mb-1 relative z-10"
-                  >
-                    Bloco 1 e 2: Específicas
-                  </h4>
-                  <p
-                    class="text-xs text-rose-600 mb-5 uppercase tracking-wider font-bold relative z-10"
-                  >
-                    Compensação de Carga
-                  </p>
-                  <p class="text-sm text-slate-300 font-medium leading-relaxed">
-                    Hoje você ignora o sistema automático. Abra a disciplina de
-                    <strong>Conhecimentos Específicos</strong> e estude 2 horas
-                    focadas apenas nisso para dominar o edital de TI.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Conteúdo: Domingo -->
-            <div id="content-cycle-c" class="animate-fade-in hidden">
-              <div
-                class="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-violet-500/10 p-4 rounded-xl border border-violet-500/20"
-              >
-                <span
-                  class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold bg-violet-500/20 text-violet-300 w-fit"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-4 w-4"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="M21 2v6h-6"></path>
-                    <path
-                      d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"
-                    ></path>
-                    <path d="M3 3v5h5"></path>
-                  </svg>
-                  Revisão Espaçada
-                </span>
-                <span
-                  class="text-sm text-slate-500 font-medium flex items-center gap-2"
-                >
-                  Consolidação de Memória
-                </span>
-              </div>
-
-              <div class="grid grid-cols-1 gap-6 sm:gap-8">
-                <div
-                  class="bg-gradient-to-br from-slate-800 to-violet-900/20 p-5 sm:p-6 rounded-2xl border-l-4 border-violet-500 hover:bg-slate-700/50 transition-colors relative overflow-hidden"
-                >
-                  <h4
-                    class="text-lg sm:text-xl font-bold text-white mb-1 relative z-10"
-                  >
-                    Fixação e Testes
-                  </h4>
-                  <p
-                    class="text-xs text-violet-600 mb-5 uppercase tracking-wider font-bold relative z-10"
-                  >
-                    Anki & Simulados
-                  </p>
-                  <div class="space-y-4">
-                    <p
-                      class="text-sm text-slate-300 font-medium leading-relaxed"
-                    >
-                      O domingo é reservado para a manutenção do seu
-                      conhecimento. Não avance em matérias novas. O foco é 100%
-                      na consolidação da memória de longo prazo.
-                    </p>
-                    <ul class="space-y-3 mt-4">
-                      <li class="flex items-start gap-3 text-sm text-slate-300">
-                        <div
-                          class="flex-shrink-0 w-6 h-6 rounded-full bg-violet-500/20 text-violet-400 flex items-center justify-center mt-0.5"
-                        >
-                          <span class="font-bold text-xs">1</span>
-                        </div>
-                        <span
-                          ><strong>Revisão Ativa (Flashcards/Anki):</strong>
-                          Revise os cartões acumulados durante a semana para
-                          fortalecer as conexões neurais.</span
-                        >
-                      </li>
-                      <li class="flex items-start gap-3 text-sm text-slate-300">
-                        <div
-                          class="flex-shrink-0 w-6 h-6 rounded-full bg-violet-500/20 text-violet-400 flex items-center justify-center mt-0.5"
-                        >
-                          <span class="font-bold text-xs">2</span>
-                        </div>
-                        <span
-                          ><strong>Simulados / Caderno de Erros:</strong>
-                          Realize baterias de questões focadas nas matérias da
-                          Fase Atual e analise profundamente os erros.</span
-                        >
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Gráfico de Inteligência -->
-      <section
-        id="intelligence-chart"
-        class="animate-slide-up"
-        style="animation-delay: 0.4s"
-      >
-        <div
-          class="bg-slate-900 rounded-3xl shadow-2xl border border-slate-800 p-5 sm:p-8"
-        >
-          <div
-            class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4"
-          >
-            <h3
-              class="text-2xl font-bold text-white flex items-center gap-3 tracking-tight"
-            >
-              <div class="bg-violet-500/20 p-2 rounded-lg text-violet-400">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-6 w-6"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path d="M12 12m-2 0a2 2 0 1 0 4 0 2 2 0 1 0-4 0" />
-                  <path d="M12 12m-7 0a7 7 0 1 0 14 0 7 7 0 1 0-14 0" />
-                  <path d="M12 2v2" />
-                  <path d="M12 20v2" />
-                  <path d="m4.93 4.93 1.41 1.41" />
-                  <path d="m17.66 17.66 1.41 1.41" />
-                  <path d="M2 12h2" />
-                  <path d="M20 12h2" />
-                  <path d="m4.93 19.07 1.41-1.41" />
-                  <path d="m17.66 6.34 1.41-1.41" />
-                </svg>
-              </div>
-              Desempenho & Inteligência Real
-            </h3>
             <button
-              data-action="download-chart"
-              class="flex w-full sm:w-auto items-center justify-center gap-2 text-xs sm:text-sm font-semibold text-slate-300 hover:text-violet-400 transition-colors bg-slate-800 border border-slate-700 hover:border-violet-500/50 px-3 py-2 rounded-lg shadow-sm"
+              data-action="toggle-completed"
+              class="flex w-full sm:w-auto items-center justify-center gap-2 text-xs sm:text-sm font-semibold text-slate-300 hover:text-emerald-400 transition-colors bg-slate-800 border border-slate-700 hover:border-emerald-500/50 px-3 py-2 rounded-lg shadow-sm"
             >
               <svg
+                id="toggle-completed-icon"
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-4 w-4 shrink-0"
                 viewBox="0 0 24 24"
@@ -1136,655 +1338,577 @@
                 stroke-linecap="round"
                 stroke-linejoin="round"
               >
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                <polyline points="7 10 12 15 17 10"></polyline>
-                <line x1="12" y1="15" x2="12" y2="3"></line>
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
               </svg>
-              Salvar Radar
+              <span id="toggle-completed-text" class="hidden sm:inline"
+                >Mostrar Concluídas</span
+              >
             </button>
           </div>
-          <p class="text-sm text-slate-500 mb-6">
-            Visão geral do seu avanço. O gráfico de <strong>Radar</strong> foca
-            no equilíbrio (%), o de <strong>Barras</strong> no volume real de
-            aulas e a <strong>Rosca Dupla</strong> nas Missões Especiais.
-          </p>
-          <div class="flex flex-col gap-12 mt-8">
-            <div
-              class="chart-container w-full max-w-full max-w-xl mx-auto bg-slate-800/30 p-2 sm:p-6 rounded-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.6)] transition-all duration-500 hover:shadow-violet-500/20 hover:transform-none cursor-pointer sm:[transform:perspective(1200px)_rotateX(15deg)_rotateY(-10deg)_translateZ(20px)]"
-            >
-              <div class="relative w-full h-[240px] sm:h-[400px]">
-                <canvas id="radarChart"></canvas>
+
+          <div class="grid grid-cols-1 gap-6">
+            <div id="phase-1-wrapper" class="group">
+              <div
+                id="phase-1-box"
+                class="bg-slate-900 p-4 sm:p-8 rounded-3xl shadow-2xl border border-slate-800 transition-all duration-500 relative overflow-hidden"
+              >
+                <div
+                  class="absolute right-0 top-0 w-48 h-48 bg-emerald-500/20 blur-[50px] pointer-events-none"
+                ></div>
+                <div class="relative z-10">
+                  <div class="flex items-center gap-3 mb-2 flex-wrap">
+                    <h4 class="font-bold text-white text-lg sm:text-xl">
+                      Fase 1: O Núcleo Duro Balanceado
+                    </h4>
+                    <span
+                      id="phase-1-badge"
+                      class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-wider"
+                      >Ativa</span
+                    >
+                  </div>
+                  <p class="text-sm text-slate-300 mb-4 max-w-2xl">
+                    Intercalamos idiomas e leis para evitar a exaustão. Assim,
+                    num dia estuda
+                    <strong class="text-white"
+                      >Português + Dir. Constitucional</strong
+                    >
+                    e no outro
+                    <strong class="text-white"
+                      >Inglês + Dir. Administrativo</strong
+                    >.
+                  </p>
+                  <div id="trackers-phase-1" class="w-full mt-2"></div>
+                </div>
               </div>
             </div>
+
             <div
-              class="chart-container w-full max-w-full bg-slate-800/30 p-2 sm:p-6 rounded-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.6)] transition-all duration-500 hover:shadow-violet-500/20 hover:transform-none cursor-pointer sm:[transform:perspective(1200px)_rotateX(15deg)_rotateY(10deg)_translateZ(20px)]"
+              id="phase-2-wrapper"
+              class="group opacity-50 hover:opacity-100 transition-opacity duration-300"
             >
-              <div class="relative w-full h-[240px] sm:h-[400px]">
-                <canvas id="barChart"></canvas>
+              <div
+                id="phase-2-box"
+                class="bg-slate-900/50 p-4 sm:p-8 rounded-3xl border-2 border-slate-800 border-dashed transition-all duration-500 relative overflow-hidden"
+              >
+                <div
+                  class="absolute right-0 top-0 w-48 h-48 bg-indigo-500/10 blur-[50px] pointer-events-none"
+                ></div>
+                <div class="relative z-10">
+                  <div class="flex items-center gap-3 mb-2 flex-wrap">
+                    <h4 class="font-bold text-white text-lg sm:text-xl">
+                      Fase 2: Conhecimentos Legislativos
+                    </h4>
+                    <span
+                      id="phase-2-badge"
+                      class="bg-slate-800 text-slate-400 border border-slate-700 text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-wider inline-flex items-center gap-1.5"
+                      ><svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-3.5 w-3.5"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <rect
+                          x="3"
+                          y="11"
+                          width="18"
+                          height="11"
+                          rx="2"
+                          ry="2"
+                        ></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                      </svg>
+                      Fase Bloqueada</span
+                    >
+                  </div>
+                  <p class="text-sm text-slate-400 mb-4 max-w-2xl">
+                    Entram em cena as leis locais e regras da casa após concluir
+                    as disciplinas pesadas.
+                  </p>
+                  <div id="trackers-phase-2" class="w-full mt-2"></div>
+                </div>
               </div>
             </div>
+
             <div
-              class="chart-container w-full max-w-full max-w-xl mx-auto bg-slate-800/30 p-2 sm:p-6 rounded-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.6)] transition-all duration-500 hover:shadow-violet-500/20 hover:transform-none cursor-pointer sm:[transform:perspective(1200px)_rotateX(15deg)_rotateY(-5deg)_translateZ(20px)]"
+              id="phase-3-wrapper"
+              class="group opacity-40 hover:opacity-100 transition-opacity duration-300"
             >
-              <div class="relative w-full h-[240px] sm:h-[400px]">
-                <canvas id="doughnutChart"></canvas>
+              <div
+                id="phase-3-box"
+                class="bg-slate-900/50 p-4 sm:p-8 rounded-3xl border-2 border-slate-800 border-dashed transition-all duration-500 relative overflow-hidden"
+              >
+                <div
+                  class="absolute right-0 top-0 w-48 h-48 bg-orange-500/10 blur-[50px] pointer-events-none"
+                ></div>
+                <div class="relative z-10">
+                  <div class="flex items-center gap-3 mb-2 flex-wrap">
+                    <h4 class="font-bold text-white text-lg sm:text-xl">
+                      Fase 3: Reta Final
+                    </h4>
+                    <span
+                      id="phase-3-badge"
+                      class="bg-slate-800 text-slate-400 border border-slate-700 text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-wider inline-flex items-center gap-1.5"
+                      ><svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-3.5 w-3.5"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <rect
+                          x="3"
+                          y="11"
+                          width="18"
+                          height="11"
+                          rx="2"
+                          ry="2"
+                        ></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                      </svg>
+                      Fase Bloqueada</span
+                    >
+                  </div>
+                  <p class="text-sm text-slate-400 mb-4 max-w-2xl">
+                    Esta fase fica reservada quase exclusivamente para
+                    Inteligência Emocional e
+                    <strong class="text-slate-300"
+                      >Revisão Geral por Simulados</strong
+                    >.
+                  </p>
+                  <div id="trackers-phase-3" class="w-full mt-2"></div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
 
-      <!-- Mapa da Evolução -->
-      <section
-        id="roadmap"
-        class="scroll-mt-24 animate-slide-up"
-        style="animation-delay: 0.6s"
+          <!-- TI Especial Tracker -->
+          <div
+            id="ti-tracker"
+            class="scroll-mt-24 mt-16 bg-slate-900 rounded-3xl p-4 sm:p-8 shadow-2xl relative overflow-hidden"
+          >
+            <div
+              class="absolute right-0 top-0 w-48 h-48 bg-cyan-500/20 blur-[50px]"
+            ></div>
+            <div
+              class="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-5 sm:gap-6"
+            >
+              <div class="w-full md:w-1/2">
+                <div class="flex items-center gap-2 mb-2">
+                  <span
+                    class="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"
+                  ></span>
+                  <span
+                    class="text-xs font-bold text-cyan-400 uppercase tracking-widest"
+                    >Missão Especial aos Sábados</span
+                  >
+                </div>
+                <h3 class="text-2xl font-bold text-white mb-2">
+                  Específicas (TI)
+                </h3>
+                <p class="text-slate-300 text-sm">
+                  Controle de visualização das 247 aulas de TI. Atualize aqui
+                  aos sábados.
+                </p>
+              </div>
+              <div
+                class="w-full md:w-1/2 bg-slate-800 p-3 sm:p-5 rounded-2xl border border-slate-700"
+              >
+                <div
+                  class="mb-3 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between"
+                >
+                  <span
+                    class="text-2xl sm:text-3xl font-extrabold text-white"
+                    id="ti-progress-percent"
+                    >0%</span
+                  >
+                  <span
+                    class="text-sm font-semibold text-slate-400"
+                    id="ti-progress-text"
+                    >0/247 (~0h)</span
+                  >
+                </div>
+                <div
+                  class="w-full bg-slate-900 rounded-full h-3 mb-4 overflow-hidden border border-slate-700 shadow-inner"
+                >
+                  <div
+                    id="ti-progress-bar"
+                    class="bg-gradient-to-r from-cyan-400 to-blue-500 h-full rounded-full transition-all duration-1000 ease-out"
+                    style="width: 0%"
+                  ></div>
+                </div>
+                <div
+                class="grid grid-cols-2 sm:flex sm:flex-wrap sm:justify-end gap-2 mt-4 w-full"
+                >
+                  <button
+                    data-action="update-subject"
+                    data-subject="ti"
+                    data-amount="-1"
+                    data-max="247"
+                  class="col-span-1 min-w-0 px-2 py-2 sm:px-3 sm:py-1.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded-lg text-xs font-bold transition-all duration-150 shadow-[0_4px_0_#020617] active:shadow-[0_0_0_#020617] active:translate-y-[4px] truncate"
+                  >
+                  <span class="sm:hidden">-1</span><span class="hidden sm:inline">-1 Aula</span>
+                  </button>
+                  <button
+                    data-action="update-subject"
+                    data-subject="ti"
+                    data-amount="1"
+                    data-max="247"
+                  class="col-span-1 min-w-0 px-2 py-2 sm:px-3 sm:py-1.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded-lg text-xs font-bold transition-all duration-150 shadow-[0_4px_0_#020617] active:shadow-[0_0_0_#020617] active:translate-y-[4px] truncate"
+                  >
+                  <span class="sm:hidden">+1</span><span class="hidden sm:inline">+1 Aula</span>
+                  </button>
+                  <button
+                    data-action="update-subject"
+                    data-subject="ti"
+                    data-amount="5"
+                    data-max="247"
+                  class="col-span-2 sm:col-span-1 min-w-0 px-2 py-2 sm:px-4 sm:py-1.5 bg-cyan-500 hover:bg-cyan-400 text-white rounded-lg text-xs font-bold transition-all duration-150 shadow-[0_4px_0_#0f172a] active:shadow-[0_0_0_#0f172a] active:translate-y-[4px] truncate"
+                  >
+                  <span class="sm:hidden">+5</span><span class="hidden sm:inline">+5 Aulas</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Simulados Especial Tracker -->
+          <div
+            class="mt-6 bg-slate-900 rounded-3xl p-4 sm:p-8 shadow-2xl relative overflow-hidden"
+          >
+            <div
+              class="absolute right-0 top-0 w-48 h-48 bg-fuchsia-500/20 blur-[50px]"
+            ></div>
+            <div
+              class="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-5 sm:gap-6"
+            >
+              <div class="w-full md:w-1/2">
+                <div class="flex items-center gap-2 mb-2">
+                  <span
+                    class="w-2 h-2 bg-fuchsia-400 rounded-full animate-pulse"
+                  ></span>
+                  <span
+                    class="text-xs font-bold text-fuchsia-400 uppercase tracking-widest"
+                    >Missão Especial aos Domingos</span
+                  >
+                </div>
+                <h3 class="text-2xl font-bold text-white mb-2">
+                  Simulados Globais
+                </h3>
+                <p class="text-slate-300 text-sm">
+                  Controle de execução de simulados completos para validação de
+                  conhecimento. Atualize aqui aos domingos.
+                </p>
+              </div>
+              <div
+                class="w-full md:w-1/2 bg-slate-800 p-3 sm:p-5 rounded-2xl border border-slate-700"
+              >
+                <div
+                  class="mb-3 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between"
+                >
+                  <span
+                    class="text-2xl sm:text-3xl font-extrabold text-white"
+                    id="simulados-progress-percent"
+                    >0%</span
+                  >
+                  <span
+                    class="text-sm font-semibold text-slate-400"
+                    id="simulados-progress-text"
+                    >0/20 (~0h)</span
+                  >
+                </div>
+                <div
+                  class="w-full bg-slate-900 rounded-full h-3 mb-4 overflow-hidden border border-slate-700 shadow-inner"
+                >
+                  <div
+                    id="simulados-progress-bar"
+                    class="bg-gradient-to-r from-fuchsia-400 to-pink-500 h-full rounded-full transition-all duration-1000 ease-out"
+                    style="width: 0%"
+                  ></div>
+                </div>
+                <div
+                  class="grid grid-cols-2 sm:flex sm:flex-wrap sm:justify-end gap-1.5 sm:gap-2 mt-4"
+                >
+                  <button
+                    data-action="update-subject"
+                    data-subject="simulados"
+                    data-amount="-1"
+                    data-max="20"
+                    class="col-span-1 px-2 py-2 sm:px-3 sm:py-1.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded-lg text-[11px] sm:text-xs font-bold transition-all duration-150 shadow-[0_4px_0_#020617] active:shadow-[0_0_0_#020617] active:translate-y-[4px]"
+                  >
+                    -1
+                  </button>
+                  <button
+                    data-action="update-subject"
+                    data-subject="simulados"
+                    data-amount="1"
+                    data-max="20"
+                    class="col-span-1 px-2 py-2 sm:px-4 sm:py-1.5 bg-fuchsia-500 hover:bg-fuchsia-400 text-white rounded-lg text-[11px] sm:text-xs font-bold transition-all duration-150 shadow-[0_4px_0_#0f172a] active:shadow-[0_0_0_#0f172a] active:translate-y-[4px]"
+                  >
+                    <span class="sm:hidden">+1</span
+                    ><span class="hidden sm:inline">+1 Simulado</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <!-- Rodapé Profissional -->
+      <footer
+        class="bg-slate-950 border-t border-slate-800/80 mt-20 pt-16 pb-12 relative z-10 overflow-hidden"
       >
+        <!-- Efeito de brilho de fundo opcional -->
         <div
-          class="mb-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
-        >
-          <div class="flex items-center gap-3">
-            <div class="bg-emerald-500/20 p-2.5 rounded-xl text-emerald-400">
+          class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-px bg-gradient-to-r from-transparent via-emerald-500/20 to-transparent"
+        ></div>
+
+        <div class="max-w-6xl mx-auto px-4 relative z-10">
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-10 mb-12">
+            <!-- Branding e Filosofia -->
+            <div class="md:col-span-5">
+              <div class="flex items-center gap-3 mb-4">
+                <img
+                  src="pwa-192x192.png"
+                  alt="Logo CLDF Pro"
+                  width="32"
+                  height="32"
+                  class="w-8 h-8 rounded-lg shadow-sm object-cover"
+                />
+                <span class="text-xl font-extrabold text-white tracking-tight"
+                  >CLDF <span class="text-emerald-500">Pro</span></span
+                >
+              </div>
+              <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                Ferramenta estratégica desenvolvida para o cargo de
+                <strong class="text-slate-300">Analista de Sistemas</strong>.
+                Focada na consistência das 2 horas diárias e no domínio
+                progressivo do edital através do método de Fases de Conquista.
+              </p>
+              <div class="flex flex-wrap gap-2">
+                <span
+                  class="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-emerald-400"
+                  ><svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-3 w-3"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M13 10V3L4 14h7v7l9-11h-7z"
+                    />
+                  </svg>
+                  PWA Ready</span
+                >
+                <span
+                  class="inline-flex items-center gap-1.5 rounded-full border border-blue-500/30 bg-blue-500/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-blue-400"
+                  ><svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-3 w-3"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"
+                    />
+                  </svg>
+                  Cloud Sync</span
+                >
+                <span
+                  class="inline-flex items-center gap-1.5 rounded-full border border-amber-500/30 bg-amber-500/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-amber-400"
+                  ><svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-3 w-3"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <path
+                      d="M11.603 9.42L9.167 4.673a.478.478 0 00-.853 0l-2.127 4.14-2.85 4.542a.476.476 0 00.244.717l14.493 5.093c.121.042.256-.008.324-.117l3.292-5.247c.059-.095.025-.218-.073-.267l-9.824-3.567.127-.123a.475.475 0 00-.317-.424zM2.87 18.256l9.13 5.394c.264.156.59.156.853 0l9.13-5.394a.477.477 0 00.082-.771L12.43 8.358a.475.475 0 00-.635.034l-8.843 9.126a.477.477 0 00-.082.738z"
+                    />
+                  </svg>
+                  Firebase</span
+                >
+              </div>
+            </div>
+
+            <!-- Links Rápidos -->
+            <div class="md:col-span-3">
+              <h5
+                class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-5"
+              >
+                Navegação Rápida
+              </h5>
+              <ul class="space-y-3">
+                <li>
+                  <button
+                    type="button"
+                    data-action="scroll-to"
+                    data-target="planner"
+                    class="text-sm font-medium text-slate-400 hover:text-emerald-400 transition-colors flex items-center gap-2 group"
+                  >
+                    <span
+                      class="w-1 h-1 rounded-full bg-slate-700 group-hover:bg-emerald-500 transition-colors"
+                    ></span>
+                    Planejador Semanal
+                  </button>
+                </li>
+                <li>
+                  <button
+                    type="button"
+                    data-action="scroll-to"
+                    data-target="roadmap"
+                    class="text-sm font-medium text-slate-400 hover:text-emerald-400 transition-colors flex items-center gap-2 group"
+                  >
+                    <span
+                      class="w-1 h-1 rounded-full bg-slate-700 group-hover:bg-emerald-500 transition-colors"
+                    ></span>
+                    Mapa da Evolução
+                  </button>
+                </li>
+                <li>
+                  <button
+                    type="button"
+                    data-action="scroll-to"
+                    data-target="ti-tracker"
+                    class="text-sm font-medium text-slate-400 hover:text-emerald-400 transition-colors flex items-center gap-2 group"
+                  >
+                    <span
+                      class="w-1 h-1 rounded-full bg-slate-700 group-hover:bg-emerald-500 transition-colors"
+                    ></span>
+                    Tracker de TI
+                  </button>
+                </li>
+                <li>
+                  <button
+                    type="button"
+                    data-action="export-data"
+                    class="text-sm font-medium text-slate-400 hover:text-emerald-400 transition-colors flex items-center gap-2 group"
+                  >
+                    <span
+                      class="w-1 h-1 rounded-full bg-slate-700 group-hover:bg-emerald-500 transition-colors"
+                    ></span>
+                    Exportar Dados
+                  </button>
+                </li>
+                <li>
+                  <label
+                    class="text-sm font-medium text-slate-400 hover:text-emerald-400 transition-colors flex items-center gap-2 group cursor-pointer"
+                  >
+                    <span
+                      class="w-1 h-1 rounded-full bg-slate-700 group-hover:bg-emerald-500 transition-colors"
+                    ></span>
+                    Importar Dados
+                    <input
+                      type="file"
+                      class="hidden"
+                      accept=".json"
+                      data-action="import-data"
+                    />
+                  </label>
+                </li>
+                <li>
+                  <button
+                    type="button"
+                    data-action="clear-cache"
+                    class="text-sm font-medium text-slate-400 hover:text-emerald-400 transition-colors flex items-center gap-2 group"
+                  >
+                    <span
+                      class="w-1 h-1 rounded-full bg-slate-700 group-hover:bg-emerald-500 transition-colors"
+                    ></span>
+                    Limpar Cache
+                  </button>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Lembrete de Sistema -->
+            <div class="md:col-span-4">
+              <h5
+                class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-5"
+              >
+                Inteligência Estratégica
+              </h5>
+              <div
+                class="bg-slate-900/50 backdrop-blur-sm border border-slate-800 rounded-2xl p-5 relative overflow-hidden group hover:border-emerald-500/30 transition-colors"
+              >
+                <div
+                  class="absolute -right-4 -top-4 w-16 h-16 bg-emerald-500/5 rounded-full group-hover:bg-emerald-500/10 transition-colors"
+                ></div>
+                <p class="text-slate-300 text-sm leading-relaxed relative z-10">
+                  "A constância vence o talento. Mesmo com apenas 2 horas, seu
+                  motor dinâmico garante que você alcance o domínio das
+                  matérias. Agora, com
+                  <strong class="text-emerald-400 font-semibold"
+                    >sincronização automática na nuvem</strong
+                  >."
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Créditos e Copyright -->
+          <div
+            class="pt-8 border-t border-slate-800/60 flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left"
+          >
+            <div class="flex items-center gap-2">
               <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6"
-                viewBox="0 0 24 24"
+                class="w-4 h-4 text-slate-600 hidden sm:block"
                 fill="none"
                 stroke="currentColor"
-                stroke-width="2.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"
+                ></path>
               </svg>
+              <p class="text-slate-500 text-xs font-medium">
+                © 2026 Motor de Estudos CLDF.
+                <span class="text-slate-400">Sincronizado na Nuvem.</span>
+              </p>
             </div>
-            <h3 class="text-2xl font-extrabold text-white tracking-tight">
-              Mapa da Evolução (Trackers)
-            </h3>
-          </div>
-          <button
-            data-action="toggle-completed"
-            class="flex w-full sm:w-auto items-center justify-center gap-2 text-xs sm:text-sm font-semibold text-slate-300 hover:text-emerald-400 transition-colors bg-slate-800 border border-slate-700 hover:border-emerald-500/50 px-3 py-2 rounded-lg shadow-sm"
-          >
-            <svg
-              id="toggle-completed-icon"
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-4 w-4 shrink-0"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-              <circle cx="12" cy="12" r="3"></circle>
-            </svg>
-            <span id="toggle-completed-text" class="hidden sm:inline"
-              >Mostrar Concluídas</span
-            >
-          </button>
-        </div>
-
-        <div class="grid grid-cols-1 gap-6">
-          <div id="phase-1-wrapper" class="group">
-            <div
-              id="phase-1-box"
-              class="bg-slate-900 p-6 sm:p-8 rounded-3xl shadow-2xl border border-slate-800 transition-all duration-500 relative overflow-hidden"
-            >
-              <div
-                class="absolute right-0 top-0 w-48 h-48 bg-emerald-500/20 blur-[50px] pointer-events-none"
-              ></div>
-              <div class="relative z-10">
-                <div class="flex items-center gap-3 mb-2 flex-wrap">
-                  <h4 class="font-bold text-white text-lg sm:text-xl">
-                    Fase 1: O Núcleo Duro Balanceado
-                  </h4>
-                  <span
-                    id="phase-1-badge"
-                    class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-wider"
-                    >Ativa</span
-                  >
-                </div>
-                <p class="text-sm text-slate-300 mb-4 max-w-2xl">
-                  Intercalamos idiomas e leis para evitar a exaustão. Assim, num
-                  dia estuda
-                  <strong class="text-white"
-                    >Português + Dir. Constitucional</strong
-                  >
-                  e no outro
-                  <strong class="text-white"
-                    >Inglês + Dir. Administrativo</strong
-                  >.
-                </p>
-                <div id="trackers-phase-1" class="w-full mt-2"></div>
-              </div>
-            </div>
-          </div>
-
-          <div
-            id="phase-2-wrapper"
-            class="group opacity-50 hover:opacity-100 transition-opacity duration-300"
-          >
-            <div
-              id="phase-2-box"
-              class="bg-slate-900/50 p-6 sm:p-8 rounded-3xl border-2 border-slate-800 border-dashed transition-all duration-500 relative overflow-hidden"
-            >
-              <div
-                class="absolute right-0 top-0 w-48 h-48 bg-indigo-500/10 blur-[50px] pointer-events-none"
-              ></div>
-              <div class="relative z-10">
-                <div class="flex items-center gap-3 mb-2 flex-wrap">
-                  <h4 class="font-bold text-white text-lg sm:text-xl">
-                    Fase 2: Conhecimentos Legislativos
-                  </h4>
-                  <span
-                    id="phase-2-badge"
-                    class="bg-slate-800 text-slate-400 border border-slate-700 text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-wider inline-flex items-center gap-1"
-                    ><svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-3 w-3"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      <rect
-                        x="3"
-                        y="11"
-                        width="18"
-                        height="11"
-                        rx="2"
-                        ry="2"
-                      ></rect>
-                      <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                    </svg>
-                    Disponível em breve...</span
-                  >
-                </div>
-                <p class="text-sm text-slate-400 mb-4 max-w-2xl">
-                  Entram em cena as leis locais e regras da casa após concluir
-                  as disciplinas pesadas.
-                </p>
-                <div id="trackers-phase-2" class="w-full mt-2"></div>
-              </div>
-            </div>
-          </div>
-
-          <div
-            id="phase-3-wrapper"
-            class="group opacity-40 hover:opacity-100 transition-opacity duration-300"
-          >
-            <div
-              id="phase-3-box"
-              class="bg-slate-900/50 p-6 sm:p-8 rounded-3xl border-2 border-slate-800 border-dashed transition-all duration-500 relative overflow-hidden"
-            >
-              <div
-                class="absolute right-0 top-0 w-48 h-48 bg-orange-500/10 blur-[50px] pointer-events-none"
-              ></div>
-              <div class="relative z-10">
-                <div class="flex items-center gap-3 mb-2 flex-wrap">
-                  <h4 class="font-bold text-white text-lg sm:text-xl">
-                    Fase 3: Reta Final
-                  </h4>
-                  <span
-                    id="phase-3-badge"
-                    class="bg-slate-800 text-slate-400 border border-slate-700 text-[10px] font-bold px-2.5 py-1 rounded-md uppercase tracking-wider inline-flex items-center gap-1"
-                    ><svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-3 w-3"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      <rect
-                        x="3"
-                        y="11"
-                        width="18"
-                        height="11"
-                        rx="2"
-                        ry="2"
-                      ></rect>
-                      <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                    </svg>
-                    Disponível em breve...</span
-                  >
-                </div>
-                <p class="text-sm text-slate-400 mb-4 max-w-2xl">
-                  Esta fase fica reservada quase exclusivamente para
-                  Inteligência Emocional e
-                  <strong class="text-slate-300"
-                    >Revisão Geral por Simulados</strong
-                  >.
-                </p>
-                <div id="trackers-phase-3" class="w-full mt-2"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- TI Especial Tracker -->
-        <div
-          id="ti-tracker"
-          class="scroll-mt-24 mt-16 bg-slate-900 rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden"
-        >
-          <div
-            class="absolute right-0 top-0 w-48 h-48 bg-cyan-500/20 blur-[50px]"
-          ></div>
-          <div
-            class="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-5 sm:gap-6"
-          >
-            <div class="w-full md:w-1/2">
-              <div class="flex items-center gap-2 mb-2">
+            <div class="flex items-center gap-6">
+              <span
+                id="app-version"
+                class="text-slate-300 text-xs font-bold uppercase tracking-tighter"
+                >Versão 1.2 Pro</span
+              >
+              <div class="flex items-center gap-2">
                 <span
-                  class="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"
+                  id="network-status-dot"
+                  class="w-2 h-2 bg-emerald-500 rounded-full shadow-[0_0_6px_#10b981]"
                 ></span>
                 <span
-                  class="text-xs font-bold text-cyan-400 uppercase tracking-widest"
-                  >Missão Especial aos Sábados</span
+                  id="network-status-text"
+                  class="text-slate-400 text-[10px] font-bold uppercase tracking-widest"
+                  >Sistema Operacional</span
                 >
-              </div>
-              <h3 class="text-2xl font-bold text-white mb-2">
-                Específicas (TI)
-              </h3>
-              <p class="text-slate-300 text-sm">
-                Controle de visualização das 247 aulas de TI. Atualize aqui aos
-                sábados.
-              </p>
-            </div>
-            <div
-              class="w-full md:w-1/2 bg-slate-800 p-4 sm:p-5 rounded-2xl border border-slate-700"
-            >
-              <div
-                class="mb-3 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between"
-              >
-                <span
-                  class="text-2xl sm:text-3xl font-extrabold text-white"
-                  id="ti-progress-percent"
-                  >0%</span
-                >
-                <span
-                  class="text-sm font-semibold text-slate-400"
-                  id="ti-progress-text"
-                  >0/247 (~0h)</span
-                >
-              </div>
-              <div
-                class="w-full bg-slate-900 rounded-full h-3 mb-4 overflow-hidden border border-slate-700 shadow-inner"
-              >
-                <div
-                  id="ti-progress-bar"
-                  class="bg-gradient-to-r from-cyan-400 to-blue-500 h-full rounded-full transition-all duration-1000 ease-out"
-                  style="width: 0%"
-                ></div>
-              </div>
-              <div class="flex flex-wrap gap-2 justify-center sm:justify-end">
-                <button
-                  data-action="update-subject"
-                  data-subject="ti"
-                  data-amount="-1"
-                  data-max="247"
-                  class="min-w-[72px] flex-1 px-3 py-2.5 sm:flex-none sm:py-1.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded-lg text-xs font-bold transition-all duration-150 shadow-[0_4px_0_#020617] active:shadow-[0_0_0_#020617] active:translate-y-[4px]"
-                >
-                  -1
-                </button>
-                <button
-                  data-action="update-subject"
-                  data-subject="ti"
-                  data-amount="1"
-                  data-max="247"
-                  class="min-w-[72px] flex-1 px-3 py-2.5 sm:flex-none sm:py-1.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded-lg text-xs font-bold transition-all duration-150 shadow-[0_4px_0_#020617] active:shadow-[0_0_0_#020617] active:translate-y-[4px]"
-                >
-                  +1
-                </button>
-                <button
-                  data-action="update-subject"
-                  data-subject="ti"
-                  data-amount="5"
-                  data-max="247"
-                  class="min-w-[72px] sm:min-w-[108px] flex-1 px-4 py-2.5 sm:flex-none sm:py-1.5 bg-cyan-500 hover:bg-cyan-400 text-white rounded-lg text-xs font-bold transition-all duration-150 shadow-[0_4px_0_#0f172a] active:shadow-[0_0_0_#0f172a] active:translate-y-[4px]"
-                >
-                  <span class="sm:hidden">+5</span
-                  ><span class="hidden sm:inline">+5 Aulas</span>
-                </button>
               </div>
             </div>
           </div>
         </div>
-
-        <!-- Simulados Especial Tracker -->
-        <div
-          class="mt-6 bg-slate-900 rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden"
-        >
-          <div
-            class="absolute right-0 top-0 w-48 h-48 bg-fuchsia-500/20 blur-[50px]"
-          ></div>
-          <div
-            class="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-5 sm:gap-6"
-          >
-            <div class="w-full md:w-1/2">
-              <div class="flex items-center gap-2 mb-2">
-                <span
-                  class="w-2 h-2 bg-fuchsia-400 rounded-full animate-pulse"
-                ></span>
-                <span
-                  class="text-xs font-bold text-fuchsia-400 uppercase tracking-widest"
-                  >Missão Especial aos Domingos</span
-                >
-              </div>
-              <h3 class="text-2xl font-bold text-white mb-2">
-                Simulados Globais
-              </h3>
-              <p class="text-slate-300 text-sm">
-                Controle de execução de simulados completos para validação de
-                conhecimento. Atualize aqui aos domingos.
-              </p>
-            </div>
-            <div
-              class="w-full md:w-1/2 bg-slate-800 p-4 sm:p-5 rounded-2xl border border-slate-700"
-            >
-              <div
-                class="mb-3 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between"
-              >
-                <span
-                  class="text-2xl sm:text-3xl font-extrabold text-white"
-                  id="simulados-progress-percent"
-                  >0%</span
-                >
-                <span
-                  class="text-sm font-semibold text-slate-400"
-                  id="simulados-progress-text"
-                  >0/20 (~0h)</span
-                >
-              </div>
-              <div
-                class="w-full bg-slate-900 rounded-full h-3 mb-4 overflow-hidden border border-slate-700 shadow-inner"
-              >
-                <div
-                  id="simulados-progress-bar"
-                  class="bg-gradient-to-r from-fuchsia-400 to-pink-500 h-full rounded-full transition-all duration-1000 ease-out"
-                  style="width: 0%"
-                ></div>
-              </div>
-              <div class="flex flex-wrap gap-2 justify-center sm:justify-end">
-                <button
-                  data-action="update-subject"
-                  data-subject="simulados"
-                  data-amount="-1"
-                  data-max="20"
-                  class="min-w-[72px] flex-1 px-3 py-2.5 sm:flex-none sm:py-1.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded-lg text-xs font-bold transition-all duration-150 shadow-[0_4px_0_#020617] active:shadow-[0_0_0_#020617] active:translate-y-[4px]"
-                >
-                  -1
-                </button>
-                <button
-                  data-action="update-subject"
-                  data-subject="simulados"
-                  data-amount="1"
-                  data-max="20"
-                  class="min-w-[72px] sm:min-w-[132px] flex-1 px-4 py-2.5 sm:flex-none sm:py-1.5 bg-fuchsia-500 hover:bg-fuchsia-400 text-white rounded-lg text-xs font-bold transition-all duration-150 shadow-[0_4px_0_#0f172a] active:shadow-[0_0_0_#0f172a] active:translate-y-[4px]"
-                >
-                  <span class="sm:hidden">+1</span
-                  ><span class="hidden sm:inline">+1 Simulado</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <!-- Rodapé Profissional -->
-    <footer
-      class="bg-slate-950 border-t border-slate-800/80 mt-20 pt-16 pb-12 relative z-10 overflow-hidden"
-    >
-      <!-- Efeito de brilho de fundo opcional -->
-      <div
-        class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-px bg-gradient-to-r from-transparent via-emerald-500/20 to-transparent"
-      ></div>
-
-      <div class="max-w-6xl mx-auto px-4 relative z-10">
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-10 mb-12">
-          <!-- Branding e Filosofia -->
-          <div class="md:col-span-5">
-            <div class="flex items-center gap-3 mb-4">
-              <img
-                src="pwa-192x192.png"
-                alt="Logo CLDF Pro"
-                width="32"
-                height="32"
-                class="w-8 h-8 rounded-lg shadow-sm object-cover"
-              />
-              <span class="text-xl font-extrabold text-white tracking-tight"
-                >CLDF <span class="text-emerald-500">Pro</span></span
-              >
-            </div>
-            <p class="text-slate-400 text-sm leading-relaxed mb-6">
-              Ferramenta estratégica desenvolvida para o cargo de
-              <strong class="text-slate-300">Analista de Sistemas</strong>.
-              Focada na consistência das 2 horas diárias e no domínio
-              progressivo do edital através do método de Fases de Conquista.
-            </p>
-            <div class="flex flex-wrap gap-2">
-              <span
-                class="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-emerald-400"
-                ><svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-3 w-3"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  stroke-width="2.5"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M13 10V3L4 14h7v7l9-11h-7z"
-                  />
-                </svg>
-                PWA Ready</span
-              >
-              <span
-                class="inline-flex items-center gap-1.5 rounded-full border border-blue-500/30 bg-blue-500/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-blue-400"
-                ><svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-3 w-3"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  stroke-width="2.5"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"
-                  />
-                </svg>
-                Cloud Sync</span
-              >
-              <span
-                class="inline-flex items-center gap-1.5 rounded-full border border-amber-500/30 bg-amber-500/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-amber-400"
-                ><svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-3 w-3"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                >
-                  <path
-                    d="M11.603 9.42L9.167 4.673a.478.478 0 00-.853 0l-2.127 4.14-2.85 4.542a.476.476 0 00.244.717l14.493 5.093c.121.042.256-.008.324-.117l3.292-5.247c.059-.095.025-.218-.073-.267l-9.824-3.567.127-.123a.475.475 0 00-.317-.424zM2.87 18.256l9.13 5.394c.264.156.59.156.853 0l9.13-5.394a.477.477 0 00.082-.771L12.43 8.358a.475.475 0 00-.635.034l-8.843 9.126a.477.477 0 00-.082.738z"
-                  />
-                </svg>
-                Firebase</span
-              >
-            </div>
-          </div>
-
-          <!-- Links Rápidos -->
-          <div class="md:col-span-3">
-            <h5
-              class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-5"
-            >
-              Navegação Rápida
-            </h5>
-            <ul class="space-y-3">
-              <li>
-                <button
-                  type="button"
-                  data-action="scroll-to"
-                  data-target="planner"
-                  class="text-sm font-medium text-slate-400 hover:text-emerald-400 transition-colors flex items-center gap-2 group"
-                >
-                  <span
-                    class="w-1 h-1 rounded-full bg-slate-700 group-hover:bg-emerald-500 transition-colors"
-                  ></span>
-                  Planejador Semanal
-                </button>
-              </li>
-              <li>
-                <button
-                  type="button"
-                  data-action="scroll-to"
-                  data-target="roadmap"
-                  class="text-sm font-medium text-slate-400 hover:text-emerald-400 transition-colors flex items-center gap-2 group"
-                >
-                  <span
-                    class="w-1 h-1 rounded-full bg-slate-700 group-hover:bg-emerald-500 transition-colors"
-                  ></span>
-                  Mapa da Evolução
-                </button>
-              </li>
-              <li>
-                <button
-                  type="button"
-                  data-action="scroll-to"
-                  data-target="ti-tracker"
-                  class="text-sm font-medium text-slate-400 hover:text-emerald-400 transition-colors flex items-center gap-2 group"
-                >
-                  <span
-                    class="w-1 h-1 rounded-full bg-slate-700 group-hover:bg-emerald-500 transition-colors"
-                  ></span>
-                  Tracker de TI
-                </button>
-              </li>
-              <li>
-                <button
-                  type="button"
-                  data-action="export-data"
-                  class="text-sm font-medium text-slate-400 hover:text-emerald-400 transition-colors flex items-center gap-2 group"
-                >
-                  <span
-                    class="w-1 h-1 rounded-full bg-slate-700 group-hover:bg-emerald-500 transition-colors"
-                  ></span>
-                  Exportar Dados
-                </button>
-              </li>
-              <li>
-                <label
-                  class="text-sm font-medium text-slate-400 hover:text-emerald-400 transition-colors flex items-center gap-2 group cursor-pointer"
-                >
-                  <span
-                    class="w-1 h-1 rounded-full bg-slate-700 group-hover:bg-emerald-500 transition-colors"
-                  ></span>
-                  Importar Dados
-                  <input
-                    type="file"
-                    class="hidden"
-                    accept=".json"
-                    data-action="import-data"
-                  />
-                </label>
-              </li>
-              <li>
-                <button
-                  type="button"
-                  data-action="clear-cache"
-                  class="text-sm font-medium text-slate-400 hover:text-emerald-400 transition-colors flex items-center gap-2 group"
-                >
-                  <span
-                    class="w-1 h-1 rounded-full bg-slate-700 group-hover:bg-emerald-500 transition-colors"
-                  ></span>
-                  Limpar Cache
-                </button>
-              </li>
-            </ul>
-          </div>
-
-          <!-- Lembrete de Sistema -->
-          <div class="md:col-span-4">
-            <h5
-              class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-5"
-            >
-              Inteligência Estratégica
-            </h5>
-            <div
-              class="bg-slate-900/50 backdrop-blur-sm border border-slate-800 rounded-2xl p-5 relative overflow-hidden group hover:border-emerald-500/30 transition-colors"
-            >
-              <div
-                class="absolute -right-4 -top-4 w-16 h-16 bg-emerald-500/5 rounded-full group-hover:bg-emerald-500/10 transition-colors"
-              ></div>
-              <p class="text-slate-300 text-sm leading-relaxed relative z-10">
-                "A constância vence o talento. Mesmo com apenas 2 horas, seu
-                motor dinâmico garante que você alcance o domínio das matérias.
-                Agora, com
-                <strong class="text-emerald-400 font-semibold"
-                  >sincronização automática na nuvem</strong
-                >."
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Créditos e Copyright -->
-        <div
-          class="pt-8 border-t border-slate-800/60 flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left"
-        >
-          <div class="flex items-center gap-2">
-            <svg
-              class="w-4 h-4 text-slate-600 hidden sm:block"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"
-              ></path>
-            </svg>
-            <p class="text-slate-500 text-xs font-medium">
-              © 2026 Motor de Estudos CLDF.
-              <span class="text-slate-400">Sincronizado na Nuvem.</span>
-            </p>
-          </div>
-          <div class="flex items-center gap-6">
-            <span
-              id="app-version"
-              class="text-slate-300 text-xs font-bold uppercase tracking-tighter"
-              >Versão 1.2 Pro</span
-            >
-            <div class="flex items-center gap-2">
-              <span
-                id="network-status-dot"
-                class="w-2 h-2 bg-emerald-500 rounded-full shadow-[0_0_6px_#10b981]"
-              ></span>
-              <span
-                id="network-status-text"
-                class="text-slate-400 text-[10px] font-bold uppercase tracking-widest"
-                >Sistema Operacional</span
-              >
-            </div>
-          </div>
-        </div>
-      </div>
-    </footer>
-
-    </div> <!-- Fim do Wrapper Principal -->
+      </footer>
+    </div>
+    <!-- Fim do Wrapper Principal -->
 
     <!-- Botão Voltar ao Topo -->
     <button

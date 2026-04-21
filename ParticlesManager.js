@@ -1,15 +1,17 @@
 export default class ParticlesManager {
   constructor(canvasId) {
     this.canvas = document.getElementById(canvasId);
+    this.ctx = null;
+    this.particles = [];
+
     if (!this.canvas) return;
 
     this.ctx = this.canvas.getContext("2d");
-    this.particles = [];
     // Ajusta a quantidade de partículas com base na largura da tela (menos partículas no celular)
     this.particleCount = window.innerWidth < 768 ? 30 : 70;
 
     this.init();
-    
+
     // Garante que o canvas se redimensione se o usuário mudar o tamanho da janela
     window.addEventListener("resize", () => {
       this.resize();

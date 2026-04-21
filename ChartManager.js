@@ -75,6 +75,15 @@ export default class ChartManager {
     }
   }
   init() {
+    // Registra o Plugin DataLabels Globalmente (carregado via CDN em index.html)
+    if (typeof ChartDataLabels !== "undefined") {
+      Chart.register(ChartDataLabels);
+    } else {
+      console.warn(
+        "ChartDataLabels plugin não foi carregado. Verifique se o CDN está acessível.",
+      );
+    }
+
     const labels = this.getLabels();
     const pointColors = this.subjects.map(
       (s) => this.colorHexMap[s.color] || "#94a3b8",
@@ -128,6 +137,7 @@ export default class ChartManager {
             },
           },
           plugins: {
+            datalabels: { display: false }, // Ocultamos no radar para não poluir visualmente
             legend: { display: false },
             tooltip: {
               backgroundColor: "rgba(15, 23, 42, 0.95)", // bg-slate-950 com opacidade
@@ -165,27 +175,6 @@ export default class ChartManager {
     }
 
     if (this.barCtx) {
-      // Plugin customizado para desenhar os números no topo das barras
-      const topLabelsPlugin = {
-        id: "topLabels",
-        afterDatasetsDraw: (chart) => {
-          const { ctx } = chart;
-          chart.data.datasets.forEach((dataset, i) => {
-            const meta = chart.getDatasetMeta(i);
-            meta.data.forEach((bar, index) => {
-              const dataValue = dataset.data[index];
-              // Pega a cor correspondente mapeada na borda do gráfico
-              ctx.fillStyle = dataset.borderColor[index] || "#cbd5e1";
-              const fontSize = this.isCompactViewport() ? 11 : 15;
-              ctx.font = `bold ${fontSize}px Inter, sans-serif`;
-              ctx.textAlign = "center";
-              ctx.textBaseline = "bottom";
-              ctx.fillText(dataValue, bar.x, bar.y - 6);
-            });
-          });
-        },
-      };
-
       this.barChart = new Chart(this.barCtx, {
         type: "bar",
         data: {
@@ -225,6 +214,47 @@ export default class ChartManager {
             },
           },
           plugins: {
+            datalabels: {
+              anchor: "end",
+              align: "top",
+              offset: 4,
+              color: (context) =>
+                context.dataset.borderColor[context.dataIndex] || "#cbd5e1",
+              font: () => ({
+                family: "Inter, sans-serif",
+                weight: "bold",
+                size: this.isCompactViewport() ? 10 : 14,
+              }),
+              opacity: (context) => {
+                const meta = context.chart.getDatasetMeta(context.datasetIndex);
+                const bar = meta.data[context.dataIndex];
+                if (bar && bar.y !== undefined && context.chart.scales.y) {
+                  const animatedValue = context.chart.scales.y.getValueForPixel(
+                    bar.y,
+                  );
+                  // Fade-in suave: atinge 100% de opacidade quando a barra chega na metade
+                  return Math.min(
+                    1,
+                    Math.max(0, animatedValue / (context.raw * 0.5 || 1)),
+                  );
+                }
+                return 1;
+              },
+              formatter: (value, context) => {
+                if (value <= 0) return "";
+                // Efeito Contador animado: Lê o valor atual da barra crescendo a cada frame
+                const meta = context.chart.getDatasetMeta(context.datasetIndex);
+                const bar = meta.data[context.dataIndex];
+                if (bar && bar.y !== undefined && context.chart.scales.y) {
+                  const animatedValue = context.chart.scales.y.getValueForPixel(
+                    bar.y,
+                  );
+                  const current = Math.max(0, Math.round(animatedValue));
+                  return current > 0 ? Math.min(current, value) : ""; // Trava no valor final
+                }
+                return value;
+              },
+            },
             legend: { display: false },
             tooltip: {
               backgroundColor: "rgba(15, 23, 42, 0.95)",
@@ -245,7 +275,6 @@ export default class ChartManager {
           },
         },
         plugins: [
-          topLabelsPlugin,
           {
             id: "bar3D",
             beforeDatasetsDraw(chart) {
@@ -344,6 +373,17 @@ export default class ChartManager {
           cutout: "60%", // Deixa os anéis um pouco mais finos e elegantes
           animation: { duration: 1000, easing: "easeOutQuart" },
           plugins: {
+            datalabels: {
+              color: "#ffffff",
+              textShadowBlur: 8, // O plugin suporta efeitos de sombra no canvas!
+              textShadowColor: "rgba(0, 0, 0, 0.8)",
+              font: () => ({
+                family: "Inter, sans-serif",
+                weight: "bold",
+                size: this.isCompactViewport() ? 11 : 15,
+              }),
+              formatter: (value) => (value > 0 ? value : ""),
+            },
             legend: { display: false },
             tooltip: {
               backgroundColor: "rgba(15, 23, 42, 0.95)",

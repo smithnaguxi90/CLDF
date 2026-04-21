@@ -8,7 +8,6 @@ import ParticlesManager from "./ParticlesManager.js";
 
 export const App = {
   config: { storageKey: "cldfStudyEngine_v1" },
-  state: null,
   storage: null,
   ui: null,
   roadmap: null,

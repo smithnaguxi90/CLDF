@@ -3,77 +3,99 @@ export default class UIManager {
     this.toastContainer = document.getElementById("toast-container");
     this.backToTopBtn = document.getElementById("back-to-top");
     this.header = document.querySelector("header");
+    this.audioCtx = null; // Inicializar como null
     this.initScrollListener();
     this.initNetworkListeners();
   }
 
-  hideLoading() {
-    const overlay = document.getElementById("loading-overlay");
-    if (overlay) {
-      overlay.classList.add("opacity-0");
+  /**
+   * Método genérico para mostrar/ocultar elementos com classes CSS
+   * @param {string} elementId - ID do elemento
+   * @param {boolean} show - true para mostrar, false para ocultar
+   * @param {Object} options - Opções de animação
+   * @param {number} options.delay - Delay antes de aplicar hide (em ms)
+   * @param {Object} options.child - Configurar element filho (ex: {selector: '.child', show: true})
+   */
+  _toggleElement(elementId, show = true, options = {}) {
+    const element = document.getElementById(elementId);
+    if (!element) return;
+
+    const delay = options.delay || 0;
+    const child = options.child;
+
+    if (show) {
+      element.classList.remove("hidden", "opacity-0");
+      element.classList.add("flex", "opacity-100");
+
+      if (child && child.show) {
+        setTimeout(() => {
+          const childEl = element.querySelector(child.selector);
+          if (childEl) {
+            childEl.classList.remove(child.hideClasses || "");
+            childEl.classList.add(child.showClasses || "");
+          }
+        }, child.delay || 10);
+      }
+    } else {
+      element.classList.add("opacity-0");
+
+      if (child && !child.show) {
+        const childEl = element.querySelector(child.selector);
+        if (childEl) {
+          childEl.classList.add(child.hideClasses || "");
+          childEl.classList.remove(child.showClasses || "");
+        }
+      }
+
       setTimeout(() => {
-        overlay.classList.add("hidden");
-        overlay.classList.remove("flex");
-      }, 500); // Tempo correspondente à duração da transição
+        element.classList.add("hidden");
+        element.classList.remove("flex", "opacity-100");
+      }, delay);
     }
+  }
+
+  hideLoading() {
+    this._toggleElement("loading-overlay", false, { delay: 500 });
   }
 
   showAuth() {
-    const authOverlay = document.getElementById("auth-overlay");
-    if (authOverlay) {
-      authOverlay.classList.remove("hidden");
-      authOverlay.classList.add("flex");
-    }
+    this._toggleElement("auth-overlay", true);
   }
 
   hideAuth() {
-    const authOverlay = document.getElementById("auth-overlay");
-    if (authOverlay) {
-      authOverlay.classList.add("hidden");
-      authOverlay.classList.remove("flex");
-    }
+    this._toggleElement("auth-overlay", false);
   }
 
   showSaving() {
-    const syncStatus = document.getElementById("sync-status");
-    if (syncStatus) {
-      syncStatus.classList.remove("hidden");
-      syncStatus.classList.add("flex");
-    }
+    this._toggleElement("sync-status", true);
   }
 
   hideSaving() {
-    const syncStatus = document.getElementById("sync-status");
-    if (syncStatus) {
-      syncStatus.classList.add("hidden");
-      syncStatus.classList.remove("flex");
-    }
+    this._toggleElement("sync-status", false);
   }
 
   openStatsModal() {
-    const modal = document.getElementById("stats-modal");
-    if (modal) {
-      modal.classList.remove("hidden");
-      modal.classList.add("flex");
-      setTimeout(() => {
-        modal.classList.remove("opacity-0");
-        modal.firstElementChild.classList.remove("scale-95");
-        modal.firstElementChild.classList.add("scale-100");
-      }, 10); // Transição suave Tailwind
-    }
+    this._toggleElement("stats-modal", true, {
+      child: {
+        show: true,
+        selector: ".firstElementChild",
+        showClasses: "scale-100",
+        hideClasses: "scale-95",
+        delay: 10,
+      },
+    });
   }
 
   closeStatsModal() {
-    const modal = document.getElementById("stats-modal");
-    if (modal) {
-      modal.classList.add("opacity-0");
-      modal.firstElementChild.classList.remove("scale-100");
-      modal.firstElementChild.classList.add("scale-95");
-      setTimeout(() => {
-        modal.classList.add("hidden");
-        modal.classList.remove("flex");
-      }, 300); // Espera a animação terminar
-    }
+    this._toggleElement("stats-modal", false, {
+      child: {
+        show: false,
+        selector: ".firstElementChild",
+        hideClasses: "scale-95",
+        showClasses: "scale-100",
+      },
+      delay: 300,
+    });
   }
 
   initScrollListener() {
@@ -149,11 +171,11 @@ export default class UIManager {
       const content = document.getElementById(`content-${id}`);
       if (!btn || !content) return;
       if (id === tabId) {
-        btn.className = `shrink-0 whitespace-nowrap w-[80%] sm:w-full rounded-xl border border-emerald-500 bg-emerald-500/10 px-4 py-3 sm:py-4 text-center text-sm sm:text-base font-bold leading-tight text-emerald-400 shadow-sm transition-all focus:outline-none`;
+        btn.className = `w-full min-w-0 rounded-xl border border-emerald-500 bg-emerald-500/10 px-4 py-3 sm:py-4 text-center text-sm sm:text-base font-bold leading-tight text-emerald-400 shadow-sm transition-all focus:outline-none`;
         content.classList.remove("hidden");
         content.classList.add("animate-fade-in");
       } else {
-        btn.className = `shrink-0 whitespace-nowrap w-[80%] sm:w-full rounded-xl border border-transparent bg-transparent px-4 py-3 sm:py-4 text-center text-sm sm:text-base font-medium leading-tight text-slate-500 transition-all hover:bg-slate-800/50 hover:text-slate-300 focus:outline-none`;
+        btn.className = `w-full min-w-0 rounded-xl border border-transparent bg-transparent px-4 py-3 sm:py-4 text-center text-sm sm:text-base font-medium leading-tight text-slate-500 transition-all hover:bg-slate-800/50 hover:text-slate-300 focus:outline-none`;
         content.classList.add("hidden");
         content.classList.remove("animate-fade-in");
       }
@@ -183,98 +205,115 @@ export default class UIManager {
     return this.audioCtx;
   }
 
-  playBeep() {
+  /**
+   * Método genérico para reproduzir sons
+   * @param {Object} config - Configuração do som
+   * @param {string} config.type - Tipo de oscilador: 'sine', 'square', 'triangle', 'sawtooth'
+   * @param {Array} config.frequencies - Array de frequências [valor inicial, valor final] ou [freq1, freq2, ...]
+   * @param {Array} config.frequencyTimes - Tempos de mudança de frequência
+   * @param {number} config.initialGain - Volume inicial (0-1)
+   * @param {number} config.duration - Duração em segundos
+   * @param {Object} config.shakeConfig - Opcional: {duration} para adicionar animação de tremida
+   */
+  _playSound(config = {}) {
     try {
       const ctx = this._initAudioCtx();
       const oscillator = ctx.createOscillator();
       const gainNode = ctx.createGain();
 
-      oscillator.type = "sine"; // Som suave e limpo
-      oscillator.frequency.setValueAtTime(880, ctx.currentTime); // Frequência do bipe (Nota A5)
-      gainNode.gain.setValueAtTime(0.05, ctx.currentTime); // Volume bem baixo (5%)
-      gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1); // Duração de 100ms
+      const type = config.type || "sine";
+      const initialGain = config.initialGain || 0.05;
+      const duration = config.duration || 0.1;
+      const now = ctx.currentTime;
+
+      oscillator.type = type;
+
+      // Configurar frequências
+      if (config.frequencies && config.frequencies.length === 1) {
+        // Frequência única
+        oscillator.frequency.setValueAtTime(config.frequencies[0], now);
+      } else if (config.frequencies && config.frequencies.length === 2) {
+        // Transição de uma frequência para outra
+        oscillator.frequency.setValueAtTime(config.frequencies[0], now);
+        oscillator.frequency.exponentialRampToValueAtTime(
+          config.frequencies[1],
+          now + duration,
+        );
+      } else if (
+        config.frequencyTimes &&
+        config.frequencyTimes.length > 0
+      ) {
+        // Múltiplas frequências em tempos específicos (para arpejos)
+        config.frequencyTimes.forEach((freqData, index) => {
+          oscillator.frequency.setValueAtTime(
+            freqData.frequency,
+            now + freqData.time,
+          );
+        });
+      }
+
+      // Configurar gain (volume)
+      gainNode.gain.setValueAtTime(initialGain, now);
+      gainNode.gain.exponentialRampToValueAtTime(0.001, now + duration);
 
       oscillator.connect(gainNode);
       gainNode.connect(ctx.destination);
-      oscillator.start();
-      oscillator.stop(ctx.currentTime + 0.1);
+      oscillator.start(now);
+      oscillator.stop(now + duration);
+
+      // Aplicar efeito visual de shake se configurado
+      if (config.shakeConfig) {
+        document.body.classList.add("animate-shake");
+        setTimeout(
+          () => document.body.classList.remove("animate-shake"),
+          (config.shakeConfig.duration || 0.4) * 1000,
+        );
+      }
     } catch {
       // Ignora silenciosamente se o navegador bloquear o áudio
     }
   }
 
+  playBeep() {
+    this._playSound({
+      type: "sine",
+      frequencies: [880],
+      initialGain: 0.05,
+      duration: 0.1,
+    });
+  }
+
   playPowerUpSound() {
-    try {
-      const ctx = this._initAudioCtx();
-      const oscillator = ctx.createOscillator();
-      const gainNode = ctx.createGain();
-
-      oscillator.type = "sine";
-      const now = ctx.currentTime;
-
-      // Efeito de "carregamento": a frequência sobe rapidamente de 200Hz para 800Hz
-      oscillator.frequency.setValueAtTime(200, now);
-      oscillator.frequency.exponentialRampToValueAtTime(800, now + 0.3);
-
-      gainNode.gain.setValueAtTime(0.1, now); // Volume um pouco mais destacado (10%)
-      gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.3); // Fade out suave em 300ms
-
-      oscillator.connect(gainNode);
-      gainNode.connect(ctx.destination);
-      oscillator.start(now);
-      oscillator.stop(now + 0.3);
-    } catch {}
+    this._playSound({
+      type: "sine",
+      frequencies: [200, 800],
+      initialGain: 0.1,
+      duration: 0.3,
+    });
   }
 
   playSuccessSound() {
-    try {
-      const ctx = this._initAudioCtx();
-      const oscillator = ctx.createOscillator();
-      const gainNode = ctx.createGain();
-
-      oscillator.type = "sine";
-      const now = ctx.currentTime;
-
-      // Arpejo de vitória (Dó Maior: C5 -> E5 -> G5 -> C6)
-      oscillator.frequency.setValueAtTime(523.25, now);
-      oscillator.frequency.setValueAtTime(659.25, now + 0.1);
-      oscillator.frequency.setValueAtTime(783.99, now + 0.2);
-      oscillator.frequency.setValueAtTime(1046.5, now + 0.3);
-
-      gainNode.gain.setValueAtTime(0.08, now); // Volume um pouco mais alto que o bipe padrão
-      gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.8); // Duração de quase 1 segundo com fade out
-
-      oscillator.connect(gainNode);
-      gainNode.connect(ctx.destination);
-      oscillator.start(now);
-      oscillator.stop(now + 0.8);
-    } catch {}
+    // Arpejo de vitória (Dó Maior: C5 -> E5 -> G5 -> C6)
+    this._playSound({
+      type: "sine",
+      frequencyTimes: [
+        { frequency: 523.25, time: 0 },
+        { frequency: 659.25, time: 0.1 },
+        { frequency: 783.99, time: 0.2 },
+        { frequency: 1046.5, time: 0.3 },
+      ],
+      initialGain: 0.08,
+      duration: 0.8,
+    });
   }
 
   playErrorSound() {
-    // Efeito visual de tremida (shake)
-    document.body.classList.add("animate-shake");
-    setTimeout(() => document.body.classList.remove("animate-shake"), 400);
-
-    try {
-      const ctx = this._initAudioCtx();
-      const oscillator = ctx.createOscillator();
-      const gainNode = ctx.createGain();
-
-      oscillator.type = "square"; // Som mais áspero para erro
-      const now = ctx.currentTime;
-
-      // Frequência baixa caindo rapidamente (150Hz -> 80Hz)
-      oscillator.frequency.setValueAtTime(150, now);
-      oscillator.frequency.exponentialRampToValueAtTime(80, now + 0.2);
-
-      gainNode.gain.setValueAtTime(0.05, now); // Volume contido (5%)
-      gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.2); // Curto e seco
-
-      oscillator.connect(gainNode);
-      gainNode.connect(ctx.destination);
-      oscillator.start(now);
-      oscillator.stop(now + 0.2);
-    } catch {}
+    this._playSound({
+      type: "square",
+      frequencies: [150, 80],
+      initialGain: 0.05,
+      duration: 0.2,
+      shakeConfig: { duration: 0.4 },
+    });
   }
 }
