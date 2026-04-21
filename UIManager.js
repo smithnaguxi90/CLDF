@@ -149,11 +149,11 @@ export default class UIManager {
       const content = document.getElementById(`content-${id}`);
       if (!btn || !content) return;
       if (id === tabId) {
-        btn.className = `flex-1 py-5 px-4 text-center font-bold text-sm sm:text-base border-b-2 transition-all whitespace-nowrap focus:outline-none min-w-[140px] relative z-10 border-emerald-500 text-emerald-400 bg-slate-800 shadow-sm`;
+        btn.className = `w-full rounded-xl border border-emerald-500 bg-emerald-500/10 px-4 py-3 sm:py-4 text-center text-sm sm:text-base font-bold leading-tight text-emerald-400 shadow-sm transition-all focus:outline-none`;
         content.classList.remove("hidden");
         content.classList.add("animate-fade-in");
       } else {
-        btn.className = `flex-1 py-5 px-4 text-center font-medium text-sm sm:text-base border-b-2 border-transparent text-slate-500 hover:text-slate-300 hover:bg-slate-800/50 transition-all whitespace-nowrap focus:outline-none min-w-[140px]`;
+        btn.className = `w-full rounded-xl border border-transparent bg-transparent px-4 py-3 sm:py-4 text-center text-sm sm:text-base font-medium leading-tight text-slate-500 transition-all hover:bg-slate-800/50 hover:text-slate-300 focus:outline-none`;
         content.classList.add("hidden");
         content.classList.remove("animate-fade-in");
       }

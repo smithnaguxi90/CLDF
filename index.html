@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="pt-BR" class="scroll-smooth overflow-x-hidden">
+<html lang="pt-BR" class="scroll-smooth overflow-x-hidden w-full">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -48,7 +48,7 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body
-    class="bg-slate-950 text-slate-300 antialiased selection:bg-emerald-500/30 selection:text-emerald-200 flex flex-col min-h-screen overflow-x-hidden"
+    class="bg-slate-950 text-slate-300 antialiased selection:bg-emerald-500/30 selection:text-emerald-200 flex flex-col min-h-screen overflow-x-hidden w-full"
   >
     <!-- Overlay de Autenticação -->
     <div
@@ -1147,33 +1147,21 @@
           </p>
           <div class="flex flex-col gap-12 mt-8">
             <div
-              class="chart-container w-full max-w-full max-w-xl mx-auto bg-slate-800/30 p-2 sm:p-6 rounded-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.6)] transition-all duration-500 hover:shadow-violet-500/20 hover:transform-none cursor-pointer"
-              style="
-                transform: perspective(1200px) rotateX(15deg) rotateY(-10deg)
-                  translateZ(20px);
-              "
+              class="chart-container w-full max-w-full max-w-xl mx-auto bg-slate-800/30 p-2 sm:p-6 rounded-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.6)] transition-all duration-500 hover:shadow-violet-500/20 hover:transform-none cursor-pointer sm:[transform:perspective(1200px)_rotateX(15deg)_rotateY(-10deg)_translateZ(20px)]"
             >
               <div class="relative w-full h-[240px] sm:h-[400px]">
                 <canvas id="radarChart"></canvas>
               </div>
             </div>
             <div
-              class="chart-container w-full max-w-full bg-slate-800/30 p-2 sm:p-6 rounded-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.6)] transition-all duration-500 hover:shadow-violet-500/20 hover:transform-none cursor-pointer"
-              style="
-                transform: perspective(1200px) rotateX(15deg) rotateY(10deg)
-                  translateZ(20px);
-              "
+              class="chart-container w-full max-w-full bg-slate-800/30 p-2 sm:p-6 rounded-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.6)] transition-all duration-500 hover:shadow-violet-500/20 hover:transform-none cursor-pointer sm:[transform:perspective(1200px)_rotateX(15deg)_rotateY(10deg)_translateZ(20px)]"
             >
               <div class="relative w-full h-[240px] sm:h-[400px]">
                 <canvas id="barChart"></canvas>
               </div>
             </div>
             <div
-              class="chart-container w-full max-w-full max-w-xl mx-auto bg-slate-800/30 p-2 sm:p-6 rounded-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.6)] transition-all duration-500 hover:shadow-violet-500/20 hover:transform-none cursor-pointer"
-              style="
-                transform: perspective(1200px) rotateX(15deg) rotateY(-5deg)
-                  translateZ(20px);
-              "
+              class="chart-container w-full max-w-full max-w-xl mx-auto bg-slate-800/30 p-2 sm:p-6 rounded-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.6)] transition-all duration-500 hover:shadow-violet-500/20 hover:transform-none cursor-pointer sm:[transform:perspective(1200px)_rotateX(15deg)_rotateY(-5deg)_translateZ(20px)]"
             >
               <div class="relative w-full h-[240px] sm:h-[400px]">
                 <canvas id="doughnutChart"></canvas>
