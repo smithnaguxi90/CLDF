@@ -45,8 +45,8 @@
     />
 
     <!-- CSS Personalizado Refinado -->
-    <script type="module" crossorigin src="/assets/index-BL0ukc9Z.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-Bl9NyJJu.css">
+    <script type="module" crossorigin src="/assets/index-DsESaOb2.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-BKMAkVkn.css">
   <link rel="manifest" href="/manifest.webmanifest"></head>
   <body
     class="bg-slate-950 text-slate-300 antialiased selection:bg-emerald-500/30 selection:text-emerald-200 flex flex-col min-h-screen overflow-x-hidden"
@@ -320,13 +320,13 @@
 
     <!-- Navegação Superior -->
     <header
-      class="bg-slate-950/90 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50 transition-all duration-300 shadow-sm"
+      class="bg-slate-950/85 backdrop-blur-xl border-b border-slate-800/80 sticky top-0 z-50 transition-all duration-300 shadow-lg shadow-black/20 w-full"
     >
       <div
-        class="max-w-6xl mx-auto px-4 sm:px-6 py-2 sm:py-3 flex flex-wrap items-center justify-between gap-3"
+        class="max-w-6xl mx-auto px-3 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-2 sm:gap-4"
       >
         <div
-          class="flex min-w-0 shrink-0 items-center gap-3 cursor-pointer"
+          class="flex min-w-0 shrink-0 items-center gap-2.5 sm:gap-3 cursor-pointer"
           data-action="scroll-top"
         >
           <img
@@ -351,10 +351,10 @@
         </div>
 
         <div
-          class="flex items-center gap-2 sm:gap-4 ml-auto"
+          class="flex items-center gap-2 sm:gap-4 ml-auto overflow-x-auto touch-pan-x [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
           <div
-            class="flex items-center gap-1 sm:gap-2 border-r border-slate-800 pr-2 sm:pr-4"
+            class="flex items-center gap-0.5 sm:gap-2 border-r border-slate-800/60 pr-2 sm:pr-4 shrink-0"
           >
             <button
               data-action="open-stats"
@@ -375,7 +375,7 @@
             </button>
             <button
               data-action="export-data"
-              class="p-2 text-slate-400 hover:text-emerald-400 hover:bg-slate-800 rounded-lg transition-colors group relative"
+              class="p-2 shrink-0 text-slate-400 hover:text-emerald-400 hover:bg-slate-800/60 rounded-lg transition-colors group relative"
               title="Exportar Backup"
               aria-label="Exportar Backup de Dados"
             >
@@ -396,7 +396,7 @@
               </svg>
             </button>
             <label
-              class="p-2 text-slate-400 hover:text-emerald-400 hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
+              class="p-2 shrink-0 text-slate-400 hover:text-emerald-400 hover:bg-slate-800/60 rounded-lg transition-colors cursor-pointer"
               title="Importar Backup"
               aria-label="Importar Backup de Dados"
             >
@@ -424,7 +424,7 @@
             </label>
             <button
               data-action="factory-reset"
-              class="p-2 text-slate-400 hover:text-rose-400 hover:bg-slate-800 rounded-lg transition-colors group relative"
+              class="p-2 shrink-0 text-slate-400 hover:text-rose-400 hover:bg-slate-800/60 rounded-lg transition-colors group relative"
               title="Restaurar Padrão (Apagar Tudo)"
               aria-label="Restaurar Padrão e Apagar Tudo"
             >
@@ -449,7 +449,7 @@
             </button>
             <button
               data-action="logout"
-              class="p-2 text-slate-400 hover:text-rose-400 hover:bg-slate-800 rounded-lg transition-colors group relative"
+              class="p-2 shrink-0 text-slate-400 hover:text-rose-400 hover:bg-slate-800/60 rounded-lg transition-colors group relative"
               title="Sair"
               aria-label="Sair da Conta"
             >
@@ -502,7 +502,7 @@
           </div>
 
           <div
-            class="flex flex-col items-end shrink-0"
+          class="flex flex-col items-end shrink-0 pl-1"
           >
             <p
               class="hidden sm:block text-[10px] uppercase text-slate-600 font-bold tracking-wider"
@@ -523,6 +523,8 @@
           </div>
         </div>
       </div>
+    <!-- Barra de Progresso Global Integrada -->
+    <div class="absolute bottom-0 left-0 h-[2px] bg-gradient-to-r from-emerald-500 to-cyan-500 transition-all duration-700 ease-out z-50" id="header-progress-bar" style="width: 0%"></div>
     </header>
 
     <main
@@ -1084,7 +1086,7 @@
                   translateZ(20px);
               "
             >
-              <div class="relative w-full h-[300px] sm:h-[400px]">
+              <div class="relative w-full h-[240px] sm:h-[400px]">
                 <canvas id="radarChart"></canvas>
               </div>
             </div>
@@ -1095,7 +1097,7 @@
                   translateZ(20px);
               "
             >
-              <div class="relative w-full h-[300px] sm:h-[400px]">
+              <div class="relative w-full h-[240px] sm:h-[400px]">
                 <canvas id="barChart"></canvas>
               </div>
             </div>
@@ -1106,7 +1108,7 @@
                   translateZ(20px);
               "
             >
-              <div class="relative w-full h-[300px] sm:h-[400px]">
+              <div class="relative w-full h-[240px] sm:h-[400px]">
                 <canvas id="doughnutChart"></canvas>
               </div>
             </div>

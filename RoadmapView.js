@@ -139,6 +139,9 @@ export default class RoadmapView {
       document.getElementById("global-progress-percent").textContent =
         `${globalPercent}% (~${totalHours}h)`;
     }
+    if (document.getElementById("header-progress-bar")) {
+      document.getElementById("header-progress-bar").style.width = `${globalPercent}%`;
+    }
 
     // Atualiza os dados dentro do Modal de Estatísticas
     const classesCurrent = totalProgress - simCurrent;

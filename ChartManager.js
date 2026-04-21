@@ -47,12 +47,12 @@ export default class ChartManager {
   }
   getRadarPointLabelFont() {
     return {
-      size: this.isCompactViewport() ? 11 : 14,
+      size: this.isCompactViewport() ? 10 : 14,
       weight: "bold",
     };
   }
   getXAxisFont() {
-    return { size: this.isCompactViewport() ? 12 : 14 };
+    return { size: this.isCompactViewport() ? 10 : 14 };
   }
   handleViewportChange() {
     const labels = this.getLabels();
@@ -176,7 +176,7 @@ export default class ChartManager {
               const dataValue = dataset.data[index];
               // Pega a cor correspondente mapeada na borda do gráfico
               ctx.fillStyle = dataset.borderColor[index] || "#cbd5e1";
-              const fontSize = this.isCompactViewport() ? 13 : 15;
+              const fontSize = this.isCompactViewport() ? 11 : 15;
               ctx.font = `bold ${fontSize}px Inter, sans-serif`;
               ctx.textAlign = "center";
               ctx.textBaseline = "bottom";
