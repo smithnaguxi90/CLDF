@@ -322,10 +322,10 @@
       class="bg-slate-950/90 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50 transition-all duration-300 shadow-sm"
     >
       <div
-        class="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
+        class="max-w-6xl mx-auto px-4 sm:px-6 py-2 sm:py-3 flex flex-wrap items-center justify-between gap-3"
       >
         <div
-          class="flex w-full min-w-0 items-center gap-3 cursor-pointer sm:w-auto"
+          class="flex min-w-0 shrink-0 items-center gap-3 cursor-pointer"
           data-action="scroll-top"
         >
           <img
@@ -333,16 +333,16 @@
             alt="Logo CLDF Pro"
             width="40"
             height="40"
-            class="w-10 h-10 rounded-xl shadow-md shrink-0 ring-2 ring-emerald-100 object-cover"
+            class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl shadow-md shrink-0 ring-2 ring-emerald-100 object-cover"
           />
           <div class="min-w-0">
             <h1
-              class="text-base sm:text-lg font-bold text-white tracking-tight leading-none truncate"
+              class="text-sm sm:text-lg font-bold text-white tracking-tight leading-none truncate"
             >
               CLDF <span class="text-emerald-600">Pro</span>
             </h1>
             <p
-              class="hidden sm:block text-[10px] uppercase tracking-wider text-slate-500 font-bold mt-0.5"
+              class="hidden sm:block text-[9px] sm:text-[10px] uppercase tracking-wider text-slate-500 font-bold mt-0.5 truncate"
             >
               Motor Dinâmico
             </p>
@@ -350,10 +350,10 @@
         </div>
 
         <div
-          class="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center sm:gap-4"
+          class="flex items-center gap-2 sm:gap-4 ml-auto"
         >
           <div
-            class="flex w-full items-center justify-between gap-1 border-b border-slate-200 pb-3 sm:mr-4 sm:w-auto sm:justify-start sm:gap-2 sm:border-b-0 sm:border-r sm:pb-0 sm:pr-4"
+            class="flex items-center gap-1 sm:gap-2 border-r border-slate-800 pr-2 sm:pr-4"
           >
             <button
               data-action="open-stats"
@@ -374,7 +374,7 @@
             </button>
             <button
               data-action="export-data"
-              class="p-3 sm:p-2 text-slate-400 hover:text-emerald-400 hover:bg-slate-800 rounded-lg transition-colors group relative"
+              class="p-2 text-slate-400 hover:text-emerald-400 hover:bg-slate-800 rounded-lg transition-colors group relative"
               title="Exportar Backup"
               aria-label="Exportar Backup de Dados"
             >
@@ -395,7 +395,7 @@
               </svg>
             </button>
             <label
-              class="p-3 sm:p-2 text-slate-400 hover:text-emerald-400 hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
+              class="p-2 text-slate-400 hover:text-emerald-400 hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
               title="Importar Backup"
               aria-label="Importar Backup de Dados"
             >
@@ -423,7 +423,7 @@
             </label>
             <button
               data-action="factory-reset"
-              class="p-3 sm:p-2 text-slate-400 hover:text-rose-400 hover:bg-slate-800 rounded-lg transition-colors group relative"
+              class="p-2 text-slate-400 hover:text-rose-400 hover:bg-slate-800 rounded-lg transition-colors group relative"
               title="Restaurar Padrão (Apagar Tudo)"
               aria-label="Restaurar Padrão e Apagar Tudo"
             >
@@ -448,7 +448,7 @@
             </button>
             <button
               data-action="logout"
-              class="p-3 sm:p-2 text-slate-400 hover:text-rose-400 hover:bg-slate-800 rounded-lg transition-colors group relative"
+              class="p-2 text-slate-400 hover:text-rose-400 hover:bg-slate-800 rounded-lg transition-colors group relative"
               title="Sair"
               aria-label="Sair da Conta"
             >
@@ -472,7 +472,7 @@
           <!-- Indicador de Salvamento Nuvem -->
           <div
             id="sync-status"
-            class="hidden items-center gap-1.5 px-2.5 py-1 bg-slate-800/80 rounded-full border border-slate-700/50 sm:mr-4 transition-all"
+            class="hidden items-center gap-1.5 px-2.5 py-1 bg-slate-800/80 rounded-full border border-slate-700/50 transition-all shrink-0"
           >
             <svg
               class="animate-spin h-3 w-3 text-emerald-400"
@@ -501,21 +501,19 @@
           </div>
 
           <div
-            class="flex w-full items-center justify-between sm:w-auto sm:flex-col sm:items-end"
+            class="flex flex-col items-end shrink-0"
           >
             <p
-              class="text-[10px] uppercase text-slate-600 font-bold tracking-wider"
+              class="hidden sm:block text-[10px] uppercase text-slate-600 font-bold tracking-wider"
             >
               Fase Atual
             </p>
             <div
-              class="flex items-center gap-2 bg-slate-800 px-2 py-1 rounded-full border border-slate-700"
+              class="flex items-center gap-1.5 sm:gap-2 bg-slate-800 px-2 py-1 rounded-full border border-slate-700"
             >
-              <span
-                class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"
-              ></span>
+              <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-500 animate-pulse"></span>
               <p
-                class="text-xs text-slate-200 font-semibold"
+                class="text-[10px] sm:text-xs text-slate-200 font-semibold max-w-[70px] sm:max-w-none truncate"
                 id="header-phase-text"
               >
                 Processando...
