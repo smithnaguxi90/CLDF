@@ -2,7 +2,7 @@
 <html lang="pt-BR" class="scroll-smooth overflow-x-hidden w-full">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>CLDF: Planejador Estratégico de Estudos Pro</title>
 
     <!-- SEO e Redes Sociais -->
@@ -48,7 +48,7 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body
-    class="bg-slate-950 text-slate-300 antialiased selection:bg-emerald-500/30 selection:text-emerald-200 flex flex-col min-h-screen overflow-x-hidden w-full"
+    class="bg-slate-950 text-slate-300 antialiased selection:bg-emerald-500/30 selection:text-emerald-200"
   >
     <!-- Overlay de Autenticação -->
     <div
@@ -317,9 +317,12 @@
       </div>
     </div>
 
+    <!-- Wrapper Principal (Anti-Bug iOS Safari) -->
+    <div class="relative w-full overflow-x-hidden flex flex-col min-h-screen">
+
     <!-- Navegação Superior -->
     <header
-      class="bg-slate-950/85 backdrop-blur-xl border-b border-slate-800/80 sticky top-0 z-50 transition-all duration-300 shadow-lg shadow-black/20 w-full"
+      class="relative bg-slate-950/85 backdrop-blur-xl border-b border-slate-800/80 sticky top-0 z-50 transition-all duration-300 shadow-lg shadow-black/20 w-full"
     >
       <div
         class="max-w-6xl mx-auto px-2 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-1 sm:gap-4"
@@ -727,7 +730,7 @@
         >
           <!-- Abas -->
           <div
-            class="flex overflow-x-auto touch-pan-x gap-2 border-b border-slate-800 bg-slate-950/50 p-2 sm:grid sm:grid-cols-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            class="flex overflow-x-auto overscroll-x-contain touch-pan-x gap-2 border-b border-slate-800 bg-slate-950/50 p-2 sm:grid sm:grid-cols-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
             <button
               class="shrink-0 whitespace-nowrap w-[80%] sm:w-full rounded-xl border border-emerald-200 bg-white px-4 py-4 text-center text-sm font-bold leading-tight text-emerald-700 shadow-sm transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/40 sm:text-base"
@@ -1780,6 +1783,8 @@
         </div>
       </div>
     </footer>
+
+    </div> <!-- Fim do Wrapper Principal -->
 
     <!-- Botão Voltar ao Topo -->
     <button
