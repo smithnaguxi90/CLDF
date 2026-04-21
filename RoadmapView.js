@@ -16,7 +16,9 @@ export default class RoadmapView {
   _updateProgress(elementPrefix, current, max) {
     const percent = Math.round((current / max) * 100);
 
-    const percentEl = document.getElementById(`${elementPrefix}-progress-percent`);
+    const percentEl = document.getElementById(
+      `${elementPrefix}-progress-percent`,
+    );
     if (percentEl) percentEl.textContent = `${percent}%`;
 
     const textEl = document.getElementById(`${elementPrefix}-progress-text`);
@@ -167,12 +169,7 @@ export default class RoadmapView {
     const simHours = simCurrent * 4;
     totalHours += simHours;
 
-    this._updateSubjectProgress(
-      "simulados",
-      simCurrent,
-      simMax,
-      4,
-    );
+    this._updateSubjectProgress("simulados", simCurrent, simMax, 4);
 
     // Atualizar progresso global
     const globalPercent =
@@ -224,10 +221,22 @@ export default class RoadmapView {
       if (el) el.textContent = content;
     };
 
-    updateStatsElement("stats-classes-completed", `${classesCurrent} / ${classesMax}`);
-    updateStatsElement("stats-hours-completed", `${totalHours}h / ${totalMaxHours}h`);
-    updateStatsElement("stats-simulados-completed", `${simCurrent} / ${simMax}`);
-    updateStatsElement("stats-days-remaining", `${remainingDays} dias (~${remainingMonths} meses)`);
+    updateStatsElement(
+      "stats-classes-completed",
+      `${classesCurrent} / ${classesMax}`,
+    );
+    updateStatsElement(
+      "stats-hours-completed",
+      `${totalHours}h / ${totalMaxHours}h`,
+    );
+    updateStatsElement(
+      "stats-simulados-completed",
+      `${simCurrent} / ${simMax}`,
+    );
+    updateStatsElement(
+      "stats-days-remaining",
+      `${remainingDays} dias (~${remainingMonths} meses)`,
+    );
 
     // Mostrar/ocultar mensagem de congratulações
     const congratsMsg = document.getElementById("stats-congrats-message");
@@ -282,7 +291,11 @@ export default class RoadmapView {
 
       const isActive = currentPhase === phaseNum;
       const phaseLabel =
-        isActive && phaseNum === 3 ? "Reta Final" : isActive ? "Ativa" : "Concluída";
+        isActive && phaseNum === 3
+          ? "Reta Final"
+          : isActive
+            ? "Ativa"
+            : "Concluída";
 
       badge.textContent = phaseLabel;
       badge.className = isActive

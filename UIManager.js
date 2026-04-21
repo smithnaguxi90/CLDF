@@ -239,10 +239,7 @@ export default class UIManager {
           config.frequencies[1],
           now + duration,
         );
-      } else if (
-        config.frequencyTimes &&
-        config.frequencyTimes.length > 0
-      ) {
+      } else if (config.frequencyTimes && config.frequencyTimes.length > 0) {
         // Múltiplas frequências em tempos específicos (para arpejos)
         config.frequencyTimes.forEach((freqData, index) => {
           oscillator.frequency.setValueAtTime(

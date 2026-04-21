@@ -29,13 +29,19 @@ describe("UIManager", () => {
       state: "running",
       createOscillator: jest.fn(() => ({
         type: "sine",
-        frequency: { setValueAtTime: jest.fn(), exponentialRampToValueAtTime: jest.fn() },
+        frequency: {
+          setValueAtTime: jest.fn(),
+          exponentialRampToValueAtTime: jest.fn(),
+        },
         connect: jest.fn(),
         start: jest.fn(),
         stop: jest.fn(),
       })),
       createGain: jest.fn(() => ({
-        gain: { setValueAtTime: jest.fn(), exponentialRampToValueAtTime: jest.fn() },
+        gain: {
+          setValueAtTime: jest.fn(),
+          exponentialRampToValueAtTime: jest.fn(),
+        },
         connect: jest.fn(),
       })),
       destination: {},
@@ -219,7 +225,9 @@ describe("UIManager", () => {
 
       setTimeout(() => {
         expect(modal.classList.contains("opacity-0")).toBe(false);
-        expect(modal.firstElementChild.classList.contains("scale-100")).toBe(true);
+        expect(modal.firstElementChild.classList.contains("scale-100")).toBe(
+          true,
+        );
         done();
       }, 50);
     });
@@ -234,7 +242,9 @@ describe("UIManager", () => {
         const modal = document.getElementById("stats-modal");
 
         expect(modal.classList.contains("opacity-0")).toBe(true);
-        expect(modal.firstElementChild.classList.contains("scale-95")).toBe(true);
+        expect(modal.firstElementChild.classList.contains("scale-95")).toBe(
+          true,
+        );
 
         // Após animação, deve estar hidden
         setTimeout(() => {
@@ -247,7 +257,8 @@ describe("UIManager", () => {
 
   describe("scrollTo()", () => {
     it("deve fazer scroll até elemento especificado", () => {
-      document.body.innerHTML += '<div id="target" style="margin-top: 1000px;">Target</div>';
+      document.body.innerHTML +=
+        '<div id="target" style="margin-top: 1000px;">Target</div>';
       const scrollToSpy = jest.spyOn(window, "scrollTo");
 
       uiManager.scrollTo("target");

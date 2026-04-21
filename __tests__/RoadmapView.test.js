@@ -29,7 +29,12 @@ describe("RoadmapView", () => {
     ],
     SPECIAL_MISSIONS: {
       ti: { id: "ti", name: "Específicas (TI)", max: 247, color: "cyan" },
-      simulados: { id: "simulados", name: "Simulados", max: 20, color: "fuchsia" },
+      simulados: {
+        id: "simulados",
+        name: "Simulados",
+        max: 20,
+        color: "fuchsia",
+      },
     },
   };
 
@@ -176,7 +181,9 @@ describe("RoadmapView", () => {
 
     it("deve desbloquear controles se matéria não estiver bloqueada", () => {
       // Primeiro bloquear
-      document.getElementById("controls-pt").classList.add("opacity-40", "pointer-events-none", "grayscale");
+      document
+        .getElementById("controls-pt")
+        .classList.add("opacity-40", "pointer-events-none", "grayscale");
 
       // Depois desbloquear
       roadmapView._updateSubjectCard("pt", 50, false);
