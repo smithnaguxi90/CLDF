@@ -1,6 +1,8 @@
 import { defineConfig } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
 import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
+import handlebars from "vite-plugin-handlebars";
+import { resolve } from "path";
 
 export default defineConfig({
   plugins: [
@@ -47,6 +49,9 @@ export default defineConfig({
       svg: {
         multipass: true,
       },
+    }),
+    handlebars({
+      partialDirectory: resolve(__dirname, 'partials'),
     }),
   ],
 });

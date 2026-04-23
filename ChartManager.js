@@ -215,45 +215,7 @@ export default class ChartManager {
           },
           plugins: {
             datalabels: {
-              anchor: "end",
-              align: "top",
-              offset: 4,
-              color: (context) =>
-                context.dataset.borderColor[context.dataIndex] || "#cbd5e1",
-              font: () => ({
-                family: "Inter, sans-serif",
-                weight: "bold",
-                size: this.isCompactViewport() ? 10 : 14,
-              }),
-              opacity: (context) => {
-                const meta = context.chart.getDatasetMeta(context.datasetIndex);
-                const bar = meta.data[context.dataIndex];
-                if (bar && bar.y !== undefined && context.chart.scales.y) {
-                  const animatedValue = context.chart.scales.y.getValueForPixel(
-                    bar.y,
-                  );
-                  // Fade-in suave: atinge 100% de opacidade quando a barra chega na metade
-                  return Math.min(
-                    1,
-                    Math.max(0, animatedValue / (context.raw * 0.5 || 1)),
-                  );
-                }
-                return 1;
-              },
-              formatter: (value, context) => {
-                if (value <= 0) return "";
-                // Efeito Contador animado: Lê o valor atual da barra crescendo a cada frame
-                const meta = context.chart.getDatasetMeta(context.datasetIndex);
-                const bar = meta.data[context.dataIndex];
-                if (bar && bar.y !== undefined && context.chart.scales.y) {
-                  const animatedValue = context.chart.scales.y.getValueForPixel(
-                    bar.y,
-                  );
-                  const current = Math.max(0, Math.round(animatedValue));
-                  return current > 0 ? Math.min(current, value) : ""; // Trava no valor final
-                }
-                return value;
-              },
+              display: false,
             },
             legend: { display: false },
             tooltip: {
@@ -286,6 +248,33 @@ export default class ChartManager {
             },
             afterDatasetsDraw(chart) {
               chart.ctx.restore();
+            },
+          },
+          {
+            id: "barLabels",
+            afterDatasetsDraw(chart) {
+              const { ctx, data, scales } = chart;
+              const yScale = scales.y;
+
+              ctx.font = "bold 14px Inter, sans-serif";
+              ctx.textAlign = "center";
+              ctx.textBaseline = "bottom";
+
+              data.datasets.forEach((dataset, datasetIndex) => {
+                const meta = chart.getDatasetMeta(datasetIndex);
+                meta.data.forEach((bar, index) => {
+                  const value = dataset.data[index];
+                  if (value <= 0) return;
+
+                  const color = dataset.borderColor?.[index] || "#cbd5e1";
+                  ctx.fillStyle = color;
+
+                  const x = bar.x;
+                  const y = bar.y - 8;
+
+                  ctx.fillText(value, x, y);
+                });
+              });
             },
           },
         ], // Ativa o nosso plugin no gráfico de barras
@@ -374,6 +363,7 @@ export default class ChartManager {
           animation: { duration: 1000, easing: "easeOutQuart" },
           plugins: {
             datalabels: {
+              display: false,
               color: "#ffffff",
               textShadowBlur: 8, // O plugin suporta efeitos de sombra no canvas!
               textShadowColor: "rgba(0, 0, 0, 0.8)",

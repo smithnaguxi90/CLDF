@@ -832,10 +832,10 @@
           >
             <!-- Abas -->
             <div
-            class="grid grid-cols-1 gap-2 border-b border-slate-800 bg-slate-950/50 p-2 sm:grid-cols-3 w-full"
+              class="grid grid-cols-1 gap-2 border-b border-slate-800 bg-slate-950/50 p-2 sm:grid-cols-3 w-full"
             >
               <button
-              class="w-full min-w-0 rounded-xl border border-emerald-200 bg-white px-4 py-3 sm:py-4 text-center text-sm font-bold leading-tight text-emerald-700 shadow-sm transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/40 sm:text-base"
+                class="w-full min-w-0 rounded-xl border border-emerald-200 bg-white px-4 py-3 sm:py-4 text-center text-sm font-bold leading-tight text-emerald-700 shadow-sm transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/40 sm:text-base"
                 id="tab-cycle-a"
                 data-action="switch-tab"
                 data-tab="cycle-a"
@@ -843,7 +843,7 @@
                 SEG A SEX (Rotação)
               </button>
               <button
-              class="w-full min-w-0 rounded-xl border border-transparent px-4 py-3 sm:py-4 text-center text-sm font-medium leading-tight text-slate-500 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/40 hover:bg-white/70 hover:text-slate-700 sm:text-base"
+                class="w-full min-w-0 rounded-xl border border-transparent px-4 py-3 sm:py-4 text-center text-sm font-medium leading-tight text-slate-500 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/40 hover:bg-white/70 hover:text-slate-700 sm:text-base"
                 id="tab-cycle-b"
                 data-action="switch-tab"
                 data-tab="cycle-b"
@@ -851,7 +851,7 @@
                 SÁBADO (Imersão TI)
               </button>
               <button
-              class="w-full min-w-0 rounded-xl border border-transparent px-4 py-3 sm:py-4 text-center text-sm font-medium leading-tight text-slate-500 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/40 hover:bg-white/70 hover:text-slate-700 sm:text-base"
+                class="w-full min-w-0 rounded-xl border border-transparent px-4 py-3 sm:py-4 text-center text-sm font-medium leading-tight text-slate-500 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/40 hover:bg-white/70 hover:text-slate-700 sm:text-base"
                 id="tab-cycle-c"
                 data-action="switch-tab"
                 data-tab="cycle-c"
@@ -1278,9 +1278,11 @@
               <div
                 class="chart-container w-full max-w-full bg-slate-800/30 p-2 sm:p-6 rounded-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.6)] transition-all duration-500 hover:shadow-violet-500/20 hover:transform-none cursor-pointer sm:[transform:perspective(1200px)_rotateX(15deg)_rotateY(10deg)_translateZ(20px)]"
               >
-              <div class="relative w-full h-[260px] sm:h-[400px] overflow-hidden">
-                <canvas id="barChart"></canvas>
-              </div>
+                <div
+                  class="relative w-full h-[260px] sm:h-[400px] overflow-hidden"
+                >
+                  <canvas id="barChart"></canvas>
+                </div>
               </div>
               <div
                 class="chart-container w-full max-w-full max-w-xl mx-auto bg-slate-800/30 p-2 sm:p-6 rounded-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.6)] transition-all duration-500 hover:shadow-violet-500/20 hover:transform-none cursor-pointer sm:[transform:perspective(1200px)_rotateX(15deg)_rotateY(-5deg)_translateZ(20px)]"
@@ -1545,34 +1547,37 @@
                   ></div>
                 </div>
                 <div
-                class="grid grid-cols-2 sm:flex sm:flex-wrap sm:justify-end gap-2 mt-4 w-full"
+                  class="grid grid-cols-2 sm:flex sm:flex-wrap sm:justify-end gap-2 mt-4 w-full"
                 >
                   <button
                     data-action="update-subject"
                     data-subject="ti"
                     data-amount="-1"
                     data-max="247"
-                  class="col-span-1 min-w-0 px-2 py-2 sm:px-3 sm:py-1.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded-lg text-xs font-bold transition-all duration-150 shadow-[0_4px_0_#020617] active:shadow-[0_0_0_#020617] active:translate-y-[4px] truncate"
+                    class="col-span-1 min-w-0 px-2 py-2 sm:px-3 sm:py-1.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded-lg text-xs font-bold transition-all duration-150 shadow-[0_4px_0_#020617] active:shadow-[0_0_0_#020617] active:translate-y-[4px] truncate"
                   >
-                  <span class="sm:hidden">-1</span><span class="hidden sm:inline">-1 Aula</span>
+                    <span class="sm:hidden">-1</span
+                    ><span class="hidden sm:inline">-1 Aula</span>
                   </button>
                   <button
                     data-action="update-subject"
                     data-subject="ti"
                     data-amount="1"
                     data-max="247"
-                  class="col-span-1 min-w-0 px-2 py-2 sm:px-3 sm:py-1.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded-lg text-xs font-bold transition-all duration-150 shadow-[0_4px_0_#020617] active:shadow-[0_0_0_#020617] active:translate-y-[4px] truncate"
+                    class="col-span-1 min-w-0 px-2 py-2 sm:px-3 sm:py-1.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded-lg text-xs font-bold transition-all duration-150 shadow-[0_4px_0_#020617] active:shadow-[0_0_0_#020617] active:translate-y-[4px] truncate"
                   >
-                  <span class="sm:hidden">+1</span><span class="hidden sm:inline">+1 Aula</span>
+                    <span class="sm:hidden">+1</span
+                    ><span class="hidden sm:inline">+1 Aula</span>
                   </button>
                   <button
                     data-action="update-subject"
                     data-subject="ti"
                     data-amount="5"
                     data-max="247"
-                  class="col-span-2 sm:col-span-1 min-w-0 px-2 py-2 sm:px-4 sm:py-1.5 bg-cyan-500 hover:bg-cyan-400 text-white rounded-lg text-xs font-bold transition-all duration-150 shadow-[0_4px_0_#0f172a] active:shadow-[0_0_0_#0f172a] active:translate-y-[4px] truncate"
+                    class="col-span-2 sm:col-span-1 min-w-0 px-2 py-2 sm:px-4 sm:py-1.5 bg-cyan-500 hover:bg-cyan-400 text-white rounded-lg text-xs font-bold transition-all duration-150 shadow-[0_4px_0_#0f172a] active:shadow-[0_0_0_#0f172a] active:translate-y-[4px] truncate"
                   >
-                  <span class="sm:hidden">+5</span><span class="hidden sm:inline">+5 Aulas</span>
+                    <span class="sm:hidden">+5</span
+                    ><span class="hidden sm:inline">+5 Aulas</span>
                   </button>
                 </div>
               </div>

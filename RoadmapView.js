@@ -152,24 +152,21 @@ export default class RoadmapView {
       this._updateSubjectCard(sub.id, percent, isBlocked);
     });
 
-    // Atualizar "Específicas (TI)" - 1 aula = 1 hora
-    const tiCurrent = progress["ti"] || 0;
-    const tiMax = this.data.SPECIAL_MISSIONS.ti.max;
-    totalProgress += tiCurrent;
-    totalMax += tiMax;
-    totalHours += tiCurrent;
+    // Função auxiliar para processar Missões Especiais e evitar duplicação de código
+    const processSpecialMission = (missionId, hoursPerItem) => {
+      const current = progress[missionId] || 0;
+      const max = this.data.SPECIAL_MISSIONS[missionId].max;
+      totalProgress += current;
+      totalMax += max;
+      const hours = current * hoursPerItem;
+      totalHours += hours;
+      this._updateSubjectProgress(missionId, current, max, hoursPerItem);
+      return { current, max, hours };
+    };
 
-    this._updateSubjectProgress("ti", tiCurrent, tiMax, 1);
-
-    // Atualizar "Simulados Globais" - 1 simulado = 4 horas
-    const simCurrent = progress["simulados"] || 0;
-    const simMax = this.data.SPECIAL_MISSIONS.simulados.max;
-    totalProgress += simCurrent;
-    totalMax += simMax;
-    const simHours = simCurrent * 4;
-    totalHours += simHours;
-
-    this._updateSubjectProgress("simulados", simCurrent, simMax, 4);
+    // Processar "Específicas (TI)" e "Simulados" dinamicamente
+    processSpecialMission("ti", 1);
+    const simStats = processSpecialMission("simulados", 4);
 
     // Atualizar progresso global
     const globalPercent =
@@ -188,9 +185,9 @@ export default class RoadmapView {
       totalProgress,
       totalMax,
       totalHours,
-      simCurrent,
-      simMax,
-      simHours,
+      simStats.current,
+      simStats.max,
+      simStats.hours,
     );
   }
 
