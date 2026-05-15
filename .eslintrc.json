@@ -1,0 +1,21 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "worker": true
+  },
+  "globals": {
+    "Chart": "readonly",
+    "ChartDataLabels": "readonly",
+    "confetti": "readonly"
+  },
+  "extends": "eslint:recommended",
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "rules": {
+    "no-unused-vars": "warn"
+  },
+  "ignorePatterns": ["dist/*", "node_modules/*"]
+}

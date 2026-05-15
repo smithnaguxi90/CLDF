@@ -16,7 +16,7 @@
     <meta property="og:title" content="CLDF: Planejador Estratégico Pro" />
     <meta
       property="og:description"
-      content="Motor Dinâmico de estudos para controle, revisão e aprovação."
+      content="Ciclo Inteligente de estudos para controle, revisão e aprovação."
     />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="pwa-512x512.png" />
@@ -53,10 +53,10 @@
     />
 
     <!-- CSS Personalizado Refinado -->
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="/src/styles/style.css" />
   </head>
   <body
-    class="bg-slate-950 text-slate-300 antialiased selection:bg-emerald-500/30 selection:text-emerald-200"
+    class="bg-slate-950 text-slate-300 antialiased selection:bg-emerald-500/30 selection:text-emerald-200 overscroll-y-none"
   >
     <!-- Overlay de Autenticação -->
     <div
@@ -64,7 +64,7 @@
       class="fixed inset-0 z-[900] hidden items-center justify-center bg-slate-950/95 backdrop-blur-md"
     >
       <div
-        class="bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl w-[90%] max-w-md text-center"
+        class="bg-slate-900/90 backdrop-blur-xl border border-slate-800/80 rounded-3xl p-8 shadow-2xl w-[90%] max-w-md text-center"
       >
         <div class="flex justify-center mb-6">
           <img
@@ -113,7 +113,7 @@
               data-action="login"
               class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl transition-colors shadow-lg shadow-emerald-600/30 flex items-center justify-center gap-2"
             >
-              Entrar no Motor Dinâmico
+              Entrar no Ciclo Inteligente
             </button>
             <button
               type="button"
@@ -201,7 +201,7 @@
       class="fixed inset-0 z-[200] hidden items-center justify-center bg-slate-950/80 backdrop-blur-sm transition-opacity duration-300 opacity-0"
     >
       <div
-        class="bg-slate-900 border border-slate-700 rounded-3xl p-6 sm:p-8 shadow-2xl w-[90%] max-w-md transform scale-95 transition-transform duration-300"
+        class="bg-slate-900/95 backdrop-blur-xl border border-slate-700/50 rounded-3xl p-6 sm:p-8 shadow-2xl w-[90%] max-w-md transform scale-95 transition-transform duration-300"
       >
         <div class="flex justify-between items-center mb-6">
           <h3 class="text-xl font-bold text-white flex items-center gap-2">
@@ -278,7 +278,8 @@
             class="flex justify-between items-center bg-slate-800 p-4 rounded-xl border border-slate-700/50 mt-2"
           >
             <span class="text-slate-400 font-medium text-sm"
-              >Estimativa para Conclusão (2h/dia):</span
+              >Estimativa para Conclusão (<span id="dynamic-pace-modal">2h</span
+              >/dia):</span
             >
             <span
               class="text-cyan-400 font-bold text-lg"
@@ -314,10 +315,31 @@
             Você finalizou toda a carga horária do planejamento.
           </p>
         </div>
-        <div class="mt-8">
+        <div class="mt-4 pt-4 border-t border-slate-800/80 space-y-3">
+          <button
+            data-action="change-pace"
+            class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 rounded-xl border border-slate-600 transition-colors flex items-center justify-center gap-2"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-4 w-4"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="12" cy="12" r="3"></circle>
+              <path
+                d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"
+              ></path>
+            </svg>
+            Configurar Ritmo (Horas/Dia)
+          </button>
           <button
             data-action="close-stats"
-            class="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 rounded-xl border border-slate-600 transition-colors"
+            class="w-full bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 font-bold py-2.5 rounded-xl border border-emerald-500/30 transition-colors"
           >
             Fechar
           </button>
@@ -329,7 +351,7 @@
     <div class="relative w-full overflow-x-hidden flex flex-col min-h-screen">
       <!-- Navegação Superior -->
       <header
-        class="relative bg-slate-950/85 backdrop-blur-xl border-b border-slate-800/80 sticky top-0 z-50 transition-all duration-300 shadow-lg shadow-black/20 w-full"
+        class="fixed top-0 left-0 w-full bg-slate-950/85 backdrop-blur-xl border-b border-slate-800/80 z-50 transition-all duration-300 shadow-lg shadow-black/20"
       >
         <div
           class="max-w-6xl mx-auto px-2 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-1 sm:gap-4"
@@ -354,7 +376,7 @@
               <p
                 class="hidden sm:block text-[9px] sm:text-[10px] uppercase tracking-wider text-slate-500 font-bold mt-0.5 truncate"
               >
-                Motor Dinâmico
+                Ciclo Inteligente
               </p>
             </div>
           </div>
@@ -477,6 +499,46 @@
               </button>
             </div>
 
+            <!-- Timer Pomodoro -->
+            <div
+              class="hidden lg:flex items-center gap-2 bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-700 shadow-inner shrink-0"
+            >
+              <span
+                id="timer-display"
+                class="text-emerald-400 font-mono font-bold text-lg w-16 text-center tracking-wider"
+                >55:00</span
+              >
+              <button
+                data-action="timer-start"
+                class="text-slate-400 hover:text-emerald-400 transition-colors"
+                title="Iniciar"
+              >
+                ▶
+              </button>
+              <button
+                data-action="timer-pause"
+                class="text-slate-400 hover:text-amber-400 transition-colors"
+                title="Pausar"
+              >
+                ⏸
+              </button>
+              <button
+                data-action="timer-reset"
+                class="text-slate-400 hover:text-rose-400 transition-colors"
+                title="Zerar"
+              >
+                ⏹
+              </button>
+            </div>
+
+            <!-- Streak Badge -->
+            <div
+              class="hidden sm:flex items-center gap-1.5 bg-orange-500/10 border border-orange-500/20 px-3 py-1.5 rounded-full text-orange-400 font-bold text-sm shadow-sm shrink-0 mr-4"
+              title="Ofensiva de Estudos"
+            >
+              🔥 <span id="streak-counter">0 Dias</span>
+            </div>
+
             <!-- Menu Hamburguer (Mobile) -->
             <div
               class="sm:hidden relative shrink-0 flex items-center pr-2 border-r border-slate-800/60 mr-1"
@@ -505,7 +567,7 @@
               <!-- Dropdown -->
               <div
                 id="mobile-menu"
-                class="hidden absolute top-full right-0 mt-4 w-56 bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl flex-col py-2 overflow-hidden z-[100] transform origin-top-right transition-all"
+                class="hidden absolute top-full right-0 mt-4 w-56 bg-slate-900/95 backdrop-blur-xl border border-slate-700/50 rounded-2xl shadow-2xl flex-col py-2 overflow-hidden z-[100] transform origin-top-right transition-all"
               >
                 <!-- Item: Estatísticas -->
                 <button
@@ -693,12 +755,12 @@
       </header>
 
       <main
-        class="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-10 space-y-8 sm:space-y-12 flex-grow"
+        class="pt-24 sm:pt-28 pb-6 sm:pb-10 max-w-6xl mx-auto px-4 sm:px-6 space-y-8 sm:space-y-12 flex-grow"
       >
         <!-- Seção Hero -->
         <section class="animate-slide-up" style="animation-delay: 0.1s">
           <div
-            class="bg-slate-900 text-white rounded-3xl p-5 sm:p-8 md:p-12 shadow-2xl relative overflow-hidden group"
+            class="bg-slate-900/90 backdrop-blur-md border border-slate-800/80 text-white rounded-3xl p-5 sm:p-8 md:p-12 shadow-2xl relative overflow-hidden group"
           >
             <div
               class="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full mix-blend-screen filter blur-[80px] opacity-40 -translate-y-1/4 translate-x-1/4 pointer-events-none"
@@ -715,7 +777,8 @@
                   <h2
                     class="text-3xl sm:text-4xl font-extrabold mb-4 tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-300"
                   >
-                    Fases de Conquista (2h/dia)
+                    Fases de Conquista (<span id="dynamic-pace-title">2h</span
+                    >/dia)
                   </h2>
                   <p
                     class="text-slate-300 text-base sm:text-lg leading-relaxed font-light"
@@ -822,7 +885,7 @@
                     <line x1="3" y1="10" x2="21" y2="10"></line>
                   </svg>
                 </div>
-                Planejador & Motor Dinâmico
+                Planejador & Ciclo Inteligente
               </h3>
             </div>
           </div>
@@ -1267,7 +1330,7 @@
             </p>
             <div class="flex flex-col gap-12 mt-8">
               <div
-                class="chart-container w-full max-w-full max-w-xl mx-auto bg-slate-800/30 p-2 sm:p-6 rounded-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.6)] transition-all duration-500 hover:shadow-violet-500/20 hover:transform-none cursor-pointer sm:[transform:perspective(1200px)_rotateX(15deg)_rotateY(-10deg)_translateZ(20px)]"
+                class="chart-container w-full max-w-full max-w-xl mx-auto bg-slate-800/30 border border-slate-700/50 p-2 sm:p-6 rounded-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.6)] transition-all duration-500 hover:shadow-violet-500/20 hover:border-violet-500/30"
               >
                 <div
                   class="relative w-full h-[240px] sm:h-[400px] overflow-hidden"
@@ -1276,7 +1339,7 @@
                 </div>
               </div>
               <div
-                class="chart-container w-full max-w-full bg-slate-800/30 p-2 sm:p-6 rounded-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.6)] transition-all duration-500 hover:shadow-violet-500/20 hover:transform-none cursor-pointer sm:[transform:perspective(1200px)_rotateX(15deg)_rotateY(10deg)_translateZ(20px)]"
+                class="chart-container w-full max-w-full bg-slate-800/30 border border-slate-700/50 p-2 sm:p-6 rounded-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.6)] transition-all duration-500 hover:shadow-violet-500/20 hover:border-violet-500/30"
               >
                 <div
                   class="relative w-full h-[260px] sm:h-[400px] overflow-hidden"
@@ -1285,12 +1348,42 @@
                 </div>
               </div>
               <div
-                class="chart-container w-full max-w-full max-w-xl mx-auto bg-slate-800/30 p-2 sm:p-6 rounded-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.6)] transition-all duration-500 hover:shadow-violet-500/20 hover:transform-none cursor-pointer sm:[transform:perspective(1200px)_rotateX(15deg)_rotateY(-5deg)_translateZ(20px)]"
+                class="chart-container w-full max-w-full max-w-xl mx-auto bg-slate-800/30 border border-slate-700/50 p-2 sm:p-6 rounded-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.6)] transition-all duration-500 hover:shadow-violet-500/20 hover:border-violet-500/30"
               >
                 <div
                   class="relative w-full h-[240px] sm:h-[400px] overflow-hidden"
                 >
                   <canvas id="doughnutChart"></canvas>
+                </div>
+              </div>
+              <div
+                class="chart-container w-full max-w-full bg-slate-800/30 border border-slate-700/50 p-2 sm:p-6 rounded-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.6)] transition-all duration-500 hover:shadow-rose-500/20 hover:border-rose-500/30 mt-4"
+              >
+                <div
+                  class="mb-4 flex flex-row items-start sm:items-center justify-between gap-2 w-full"
+                >
+                  <div class="text-left flex-1 min-w-0">
+                    <h4
+                      class="text-rose-400 font-bold text-base sm:text-lg pl-1 sm:pl-2 leading-tight"
+                    >
+                      Evolução das Notas (Simulados)
+                    </h4>
+                    <p
+                      class="text-[10px] sm:text-xs text-slate-500 font-medium mt-1 pl-1 sm:pl-2 truncate sm:whitespace-normal"
+                    >
+                      Acompanhe a trajetória do seu rendimento líquido ao longo
+                      do tempo.
+                    </p>
+                  </div>
+                  <div
+                    id="simulado-badge-container"
+                    class="shrink-0 flex items-center justify-end ml-auto"
+                  ></div>
+                </div>
+                <div
+                  class="relative w-full h-[260px] sm:h-[400px] overflow-hidden"
+                >
+                  <canvas id="lineChart"></canvas>
                 </div>
               </div>
             </div>
@@ -1494,7 +1587,7 @@
           <!-- TI Especial Tracker -->
           <div
             id="ti-tracker"
-            class="scroll-mt-24 mt-16 bg-slate-900 rounded-3xl p-4 sm:p-8 shadow-2xl relative overflow-hidden"
+            class="scroll-mt-24 mt-16 bg-slate-900/95 backdrop-blur-sm border border-slate-800/80 rounded-3xl p-4 sm:p-8 shadow-2xl relative overflow-hidden"
           >
             <div
               class="absolute right-0 top-0 w-48 h-48 bg-cyan-500/20 blur-[50px]"
@@ -1586,7 +1679,7 @@
 
           <!-- Simulados Especial Tracker -->
           <div
-            class="mt-6 bg-slate-900 rounded-3xl p-4 sm:p-8 shadow-2xl relative overflow-hidden"
+            class="mt-6 bg-slate-900/95 backdrop-blur-sm border border-slate-800/80 rounded-3xl p-4 sm:p-8 shadow-2xl relative overflow-hidden"
           >
             <div
               class="absolute right-0 top-0 w-48 h-48 bg-fuchsia-500/20 blur-[50px]"
@@ -1857,7 +1950,7 @@
                 ></div>
                 <p class="text-slate-300 text-sm leading-relaxed relative z-10">
                   "A constância vence o talento. Mesmo com apenas 2 horas, seu
-                  motor dinâmico garante que você alcance o domínio das
+                  ciclo inteligente garante que você alcance o domínio das
                   matérias. Agora, com
                   <strong class="text-emerald-400 font-semibold"
                     >sincronização automática na nuvem</strong
@@ -1887,7 +1980,7 @@
                 ></path>
               </svg>
               <p class="text-slate-500 text-xs font-medium">
-                © 2026 Motor de Estudos CLDF.
+                © 2026 Planejador Adaptativo CLDF.
                 <span class="text-slate-400">Sincronizado na Nuvem.</span>
               </p>
             </div>
@@ -1937,6 +2030,6 @@
     </button>
 
     <!-- Lógica da Aplicação -->
-    <script type="module" src="app.js"></script>
+    <script type="module" src="/src/main.js"></script>
   </body>
 </html>
