@@ -6,6 +6,7 @@ export default class UIManager {
     this.backToTopBtn = document.getElementById("back-to-top");
     this.header = document.querySelector("header");
     this.initScrollListener();
+    this.initWheelScrollFallback();
     this.initNetworkListeners();
   }
 
@@ -171,6 +172,65 @@ export default class UIManager {
           16,
         behavior: "smooth",
       });
+  }
+
+  initWheelScrollFallback() {
+    const overlaySelector = "#auth-overlay, #loading-overlay, #stats-modal";
+    const wheelTargets = document.querySelectorAll(
+      `${overlaySelector}, #auth-overlay > *, #loading-overlay > *, #stats-modal > *`,
+    );
+
+    const canScrollElement = (element, deltaY) => {
+      if (
+        !element ||
+        element === document.body ||
+        element === document.documentElement
+      ) {
+        return false;
+      }
+
+      const style = window.getComputedStyle(element);
+      const allowsScroll = /(auto|scroll|overlay)/.test(style.overflowY);
+      if (!allowsScroll || element.scrollHeight <= element.clientHeight) {
+        return false;
+      }
+
+      if (deltaY > 0) {
+        return element.scrollTop + element.clientHeight < element.scrollHeight;
+      }
+
+      return element.scrollTop > 0;
+    };
+
+    const hasScrollableParent = (target, deltaY, boundary) => {
+      let current = target;
+
+      while (current && current !== boundary) {
+        if (canScrollElement(current, deltaY)) {
+          return true;
+        }
+
+        current = current.parentElement;
+      }
+
+      return canScrollElement(boundary, deltaY);
+    };
+
+    const handleWheel = (event) => {
+      const overlay = event.target?.closest?.(overlaySelector);
+      if (!overlay || overlay.classList.contains("hidden")) return;
+      if (hasScrollableParent(event.target, event.deltaY, overlay)) return;
+
+      window.scrollBy({ top: event.deltaY, behavior: "auto" });
+      event.preventDefault();
+    };
+
+    wheelTargets.forEach((element) => {
+      element.addEventListener("wheel", handleWheel, {
+        capture: true,
+        passive: false,
+      });
+    });
   }
 
   initNetworkListeners() {

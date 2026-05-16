@@ -58,8 +58,10 @@
       /* Força bruta contra bugs de Scroll Horizontal em dispositivos móveis */
       html,
       body {
+        height: auto !important;
         max-width: 100% !important;
         overflow-x: hidden !important;
+        overflow-y: auto !important;
       }
       *,
       *::before,
@@ -74,7 +76,7 @@
     </style>
   </head>
   <body
-    class="bg-slate-950 text-slate-300 antialiased selection:bg-emerald-500/30 selection:text-emerald-200 overscroll-y-none overflow-x-hidden"
+    class="bg-slate-950 text-slate-300 antialiased selection:bg-emerald-500/30 selection:text-emerald-200 overflow-x-hidden"
   >
     <!-- Overlay de Autenticação -->
     <div
@@ -82,7 +84,7 @@
       class="fixed inset-0 z-[900] hidden items-center justify-center bg-slate-950/95 p-3 backdrop-blur-md sm:p-4"
     >
       <div
-        class="max-h-[calc(100dvh-1.5rem)] w-full max-w-md overflow-y-auto rounded-2xl border border-slate-800/80 bg-slate-900/90 p-5 text-center shadow-2xl backdrop-blur-xl sm:max-h-[calc(100dvh-2rem)] sm:rounded-3xl sm:p-8"
+        class="max-h-[calc(100dvh-1.5rem)] w-full max-w-md rounded-2xl border border-slate-800/80 bg-slate-900/90 p-5 text-center shadow-2xl backdrop-blur-xl sm:max-h-[calc(100dvh-2rem)] sm:rounded-3xl sm:p-8"
       >
         <div class="flex justify-center mb-6">
           <img
