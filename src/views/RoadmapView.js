@@ -95,13 +95,13 @@ export default class RoadmapView {
       container.innerHTML = subjects
         .map((sub) => {
           return `
-            <div class="bg-slate-800 border border-slate-700 rounded-2xl p-3.5 sm:p-5 w-full shadow-sm mb-3 transition-all duration-300" id="tracker-card-${sub.id}">
-                <div class="mb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-sm">
-                    <span class="min-w-0 font-bold text-white flex items-center gap-2">
+            <div class="w-full rounded-xl border border-slate-700 bg-slate-800 p-3 shadow-sm transition-all duration-300 sm:rounded-2xl sm:p-5" id="tracker-card-${sub.id}">
+                <div class="mb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-sm w-full">
+                    <span class="min-w-0 font-bold text-white flex items-center gap-2 flex-1">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0 text-${sub.color}-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
-                        <span class="truncate text-sm sm:text-base">${sub.name}</span>
+                        <span class="truncate text-sm sm:text-base leading-tight">${sub.name}</span>
                     </span>
-                    <span class="self-start shrink-0 text-${sub.color}-300 font-bold bg-${sub.color}-900 border border-${sub.color}-800 px-2 py-0.5 rounded text-[10px] sm:text-xs" id="${sub.id}-text">0/${sub.max} (0% - ~0h)</span>
+                    <span class="self-start max-w-full shrink-0 rounded border border-${sub.color}-800 bg-${sub.color}-900 px-2 py-0.5 text-[10px] font-bold text-${sub.color}-300 break-words sm:self-auto sm:text-xs" id="${sub.id}-text">0/${sub.max} (0% - ~0h)</span>
                 </div>
                 <div class="w-full bg-slate-900 rounded-full h-2.5 sm:h-3 mb-4 overflow-hidden border border-slate-700 shadow-inner">
                     <div class="bg-${sub.color}-500 h-full rounded-full transition-all duration-500 ease-out" id="${sub.id}-bar" style="width: 0%"></div>
@@ -330,7 +330,7 @@ export default class RoadmapView {
       // Fase desbloqueada
       wrapper.className = "group opacity-100 transition-opacity duration-300";
       box.className =
-        "bg-slate-900 p-6 sm:p-8 rounded-3xl shadow-2xl border border-slate-800 transition-all duration-500 relative overflow-hidden";
+        "relative overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 p-4 shadow-2xl transition-all duration-500 sm:rounded-3xl sm:p-8";
       if (trackersDiv) trackersDiv.classList.remove("hidden");
 
       const isActive = currentPhase === phaseNum;
@@ -349,7 +349,7 @@ export default class RoadmapView {
       // Fase bloqueada
       wrapper.className = `group opacity-${blockedOpacity} hover:opacity-100 transition-opacity duration-300`;
       box.className =
-        "bg-slate-900/50 p-6 sm:p-8 rounded-3xl border-2 border-slate-800 border-dashed transition-all duration-500 relative overflow-hidden";
+        "relative overflow-hidden rounded-2xl border-2 border-dashed border-slate-800 bg-slate-900/50 p-4 transition-all duration-500 sm:rounded-3xl sm:p-8";
       if (trackersDiv) trackersDiv.classList.add("hidden");
 
       badge.innerHTML =
@@ -376,13 +376,13 @@ export default class RoadmapView {
         const current = progress[sub.id] || 0;
         const percent = Math.round((current / sub.max) * 100);
         return `
-          <div class="flex-1 min-w-[200px] flex flex-col gap-2 rounded-xl border border-slate-600/50 bg-slate-700/50 p-3 shadow-sm transition-transform hover:-translate-y-0.5">
+          <div class="flex w-full min-w-0 flex-1 flex-col gap-2 rounded-xl border border-slate-600/50 bg-slate-700/50 p-3 shadow-sm transition-transform hover:-translate-y-0.5 sm:w-auto sm:min-w-[200px]">
             <div class="flex items-center justify-between gap-2">
-              <span class="flex items-center gap-2 text-sm font-bold text-slate-200 truncate">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0 text-${sub.color}-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+              <span class="flex items-center gap-2 text-sm font-bold text-slate-200 truncate min-w-0">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0 min-w-[16px] text-${sub.color}-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
                 <span class="truncate">${sub.name}</span>
               </span>
-              <span class="text-xs font-bold text-slate-400">${percent}%</span>
+              <span class="text-xs font-bold text-slate-400 shrink-0 ml-1">${percent}%</span>
             </div>
             <div class="w-full bg-slate-900 rounded-full h-1.5 overflow-hidden border border-slate-700/50 shadow-inner">
               <div class="dynamic-bar bg-${sub.color}-500 h-full rounded-full transition-all duration-1000 ease-out" style="width: 0%" data-width="${percent}%"></div>

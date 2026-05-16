@@ -2,4 +2,45 @@
 @tailwind components;
 @tailwind utilities;
 
-/* O resto do seu CSS personalizado continua aqui para baixo... */
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  body {
+    min-width: 0;
+  }
+
+  img,
+  canvas,
+  video {
+    max-width: 100%;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    min-width: 0;
+  }
+}
+
+@layer components {
+  .chart-container canvas {
+    display: block;
+    height: 100% !important;
+    max-width: 100%;
+    width: 100% !important;
+  }
+
+  .responsive-copy {
+    overflow-wrap: anywhere;
+    word-break: normal;
+  }
+}
