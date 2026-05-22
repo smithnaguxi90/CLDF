@@ -367,7 +367,7 @@ export default class ChartManager {
 
           ctx.font = `bold ${fontSize * 0.35}px Inter, sans-serif`;
           ctx.fillStyle = "#94a3b8"; // Cinza ardósia
-          ctx.fillText("GERAL", textX, textY + fontSize * 0.7);
+          ctx.fillText("MISSÕES", textX, textY + fontSize * 0.7);
           ctx.save();
         },
       };
@@ -378,18 +378,6 @@ export default class ChartManager {
         data: {
           labels: ["Concluído", "Pendente"],
           datasets: [
-            {
-              label: "Específicas (TI)",
-              data: [0, 100],
-              backgroundColor: [
-                this.colorHexMap.cyan,
-                "rgba(8, 145, 178, 0.1)",
-              ], // Cyan
-              borderColor: ["#0f172a", "#0f172a"],
-              borderWidth: 2,
-              borderRadius: [20, 0], // Arredonda as pontas para aspecto de tubo 3D
-              hoverOffset: 5,
-            },
             {
               label: "Simulados Globais",
               data: [0, 100],
@@ -438,8 +426,7 @@ export default class ChartManager {
               callbacks: {
                 label: (context) => {
                   const label = context.dataset.label || "";
-                  const unit =
-                    label === "Simulados Globais" ? "Simulados" : "Aulas";
+                  const unit = "Simulados";
                   const isCompleted = context.dataIndex === 0;
                   return ` ${label}: ${context.raw} ${unit} (${isCompleted ? "Concluído" : "Pendente"})`;
                 },
@@ -639,7 +626,16 @@ export default class ChartManager {
       });
     }
   }
-  update(progress, visibleSubjects, simuladoScores = []) {
+  update(
+    progress,
+    visibleSubjects,
+    simuladoScores = [],
+    meta = 80,
+    warning = 70,
+  ) {
+    this.META_SIMULADO = meta;
+    this.WARNING_SIMULADO = warning;
+
     // 1. Debounce: Salva o estado e só dispara o processamento pesado do Canvas 250ms após o último clique
     this._pendingUpdateData = { progress, visibleSubjects, simuladoScores };
 
@@ -695,36 +691,21 @@ export default class ChartManager {
       }
 
       if (this.doughnutChart) {
-        // Gradiente 3D simulando luz e sombra nos "tubos" da rosca
-        const tiGradient = this.doughnutCtx.createLinearGradient(0, 0, 0, 300);
-        tiGradient.addColorStop(0, this.colorHexMap.cyan);
-        tiGradient.addColorStop(1, "#020617");
-
         const simGradient = this.doughnutCtx.createLinearGradient(0, 0, 0, 300);
         simGradient.addColorStop(0, this.colorHexMap.fuchsia);
         simGradient.addColorStop(1, "#020617");
 
         this.doughnutChart.data.datasets[0].backgroundColor = [
-          tiGradient,
-          "rgba(8, 145, 178, 0.05)",
-        ];
-        this.doughnutChart.data.datasets[1].backgroundColor = [
           simGradient,
           "rgba(192, 38, 211, 0.05)",
         ];
 
-        const tiSub = this.subjects.find((s) => s.id === "ti");
         const simSub = this.subjects.find((s) => s.id === "simulados");
 
-        if (tiSub) {
-          const tiCurrent = progress.ti || 0;
-          const tiRemaining = Math.max(0, tiSub.max - tiCurrent);
-          this.doughnutChart.data.datasets[0].data = [tiCurrent, tiRemaining];
-        }
         if (simSub) {
           const simCurrent = progress.simulados || 0;
           const simRemaining = Math.max(0, simSub.max - simCurrent);
-          this.doughnutChart.data.datasets[1].data = [simCurrent, simRemaining];
+          this.doughnutChart.data.datasets[0].data = [simCurrent, simRemaining];
         }
         this.doughnutChart.update();
       }

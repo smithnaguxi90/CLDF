@@ -9,7 +9,7 @@ self.addEventListener("message", async (e) => {
       const { progress, subjectsQueue, specialMissions } = payload;
 
       // 1. Usa a fonte única da verdade para as regras de negócio
-      const newPhase = RoadmapRules.calculatePhase(progress);
+      const newPhase = RoadmapRules.calculatePhase(progress, subjectsQueue);
 
       // 2. Processamento Pesado de Arrays (Fila do Ciclo Ativo e Concluídas)
       const pending = subjectsQueue.filter(
@@ -30,7 +30,6 @@ self.addEventListener("message", async (e) => {
 
       const visibleSubjects = [
         ...visibleSubjectsList,
-        specialMissions.ti,
         specialMissions.simulados,
       ];
 

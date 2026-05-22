@@ -3,6 +3,9 @@ import { VitePWA } from "vite-plugin-pwa";
 import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
 
 export default defineConfig({
+  server: {
+    port: 1804,
+  },
   plugins: [
     VitePWA({
       registerType: "prompt",

@@ -1,11 +1,4 @@
 export const SPECIAL_MISSIONS = {
-  ti: {
-    id: "ti",
-    name: "Específicas (TI)",
-    shortName: "TI",
-    max: 247,
-    color: "cyan",
-  },
   simulados: {
     id: "simulados",
     name: "Simulados Globais",
@@ -33,11 +26,11 @@ export const SUBJECTS_QUEUE = [
     phase: 1,
   },
   {
-    id: "eng",
-    name: "Língua Inglesa",
-    shortName: "Ingl.",
-    max: 33,
-    color: "orange",
+    id: "ti",
+    name: "Específicas (TI)",
+    shortName: "Específicas (TI)",
+    max: 247,
+    color: "cyan",
     phase: 1,
   },
   {
@@ -63,6 +56,14 @@ export const SUBJECTS_QUEUE = [
     max: 16,
     color: "violet",
     phase: 2,
+  },
+  {
+    id: "eng",
+    name: "Língua Inglesa",
+    shortName: "Inglês",
+    max: 33,
+    color: "orange",
+    phase: 3,
   },
   {
     id: "emo",

@@ -1,18 +1,27 @@
 export default class RoadmapRules {
-  static calculatePhase(progress) {
+  static calculatePhase(progress, subjectsQueue = []) {
     let newPhase = 1;
-    const {
-      pt = 0,
-      admin = 0,
-      const: constVal = 0,
-      eng = 0,
-      legis = 0,
-      ridf = 0,
-    } = progress;
 
-    if (pt >= 91 && admin >= 132 && constVal >= 125 && eng >= 33) {
+    // Agrupa as matérias pelas suas respectivas fases
+    const phase1Subjects = subjectsQueue.filter((s) => s.phase === 1);
+    const phase2Subjects = subjectsQueue.filter((s) => s.phase === 2);
+
+    // Verifica se TODAS as matérias da Fase 1 atingiram 100% da sua carga (max)
+    const isPhase1Complete =
+      phase1Subjects.length > 0 &&
+      phase1Subjects.every((sub) => (progress[sub.id] || 0) >= sub.max);
+
+    if (isPhase1Complete) {
       newPhase = 2;
-      if (legis >= 71 && ridf >= 16) {
+
+      // Desbloqueia Fase 3 ao atingir dinamicamente ~60% da Fase 2
+      const isPhase2ReadyForNext =
+        phase2Subjects.length > 0 &&
+        phase2Subjects.every(
+          (sub) => (progress[sub.id] || 0) >= Math.ceil(sub.max * 0.6),
+        );
+
+      if (isPhase2ReadyForNext) {
         newPhase = 3;
       }
     }

@@ -176,8 +176,7 @@ export default class RoadmapView {
       return { current, max, hours };
     };
 
-    // Processar "Específicas (TI)" e "Simulados" dinamicamente
-    processSpecialMission("ti", 1);
+    // Processar "Simulados" dinamicamente
     const simStats = processSpecialMission("simulados", 4);
 
     // Atualizar progresso global

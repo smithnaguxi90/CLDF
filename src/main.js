@@ -142,6 +142,136 @@ export const App = {
     }
   },
   setupEventListeners() {
+    const actions = {
+      "timer-start": () => this.timer.start(),
+      "timer-pause": () => this.timer.pause(),
+      "timer-reset": () => this.timer.reset(),
+      "scroll-top": () => window.scrollTo({ top: 0, behavior: "smooth" }),
+      "scroll-to": (target) => this.ui.scrollTo(target.dataset.target),
+      "switch-tab": (target) => {
+        this.ui.switchTab(target.dataset.tab);
+        if (target.dataset.tab === "cycle-a") {
+          this.roadmap.view.animateDynamicCycle();
+        }
+      },
+      "toggle-menu": () => {
+        const menu = document.getElementById("mobile-menu");
+        if (menu) {
+          menu.classList.toggle("hidden");
+          menu.classList.toggle("flex");
+        }
+      },
+      "export-data": () => this.exportData(),
+      "factory-reset": () => this.factoryReset(),
+      "clear-cache": () => this.clearCache(),
+      "download-chart": () => {
+        if (this.chartManager) this.chartManager.downloadRadarChart();
+      },
+      "open-stats": () => this.ui.openStatsModal(),
+      "close-stats": () => this.ui.closeStatsModal(),
+      "change-pace": () => {
+        const newPace = prompt(
+          "Quantas horas você estuda por dia?",
+          this.state.pace || 2,
+        );
+        if (newPace !== null) {
+          const parsed = parseFloat(newPace);
+          if (!isNaN(parsed) && parsed > 0) {
+            this.state.pace = parsed;
+            this.storage.save(this.state);
+            this.roadmap.checkAndRender();
+            this.ui.showToast("Ritmo de estudo atualizado!", "success");
+          } else {
+            this.ui.showToast("Valor inválido.", "error");
+          }
+        }
+      },
+      "change-goals": () => {
+        const currentMeta = this.state.metaSimulado || 80;
+        const newMeta = prompt(
+          "Qual a sua nota meta para os Simulados? (Ex: 85)",
+          currentMeta,
+        );
+        if (newMeta !== null) {
+          const parsed = parseFloat(newMeta);
+          if (!isNaN(parsed) && parsed > 0 && parsed <= 100) {
+            this.state.metaSimulado = parsed;
+            this.state.warningSimulado = parsed - 10;
+            this.storage.save(this.state);
+            this.roadmap.checkAndRender();
+            this.ui.showToast("Metas de simulado atualizadas!", "success");
+          } else {
+            this.ui.showToast("Valor inválido.", "error");
+          }
+        }
+      },
+      "toggle-completed": () => this.roadmap.toggleCompleted(),
+      "update-subject": (target) => {
+        this.roadmap.updateSubject(
+          target.dataset.subject,
+          parseInt(target.dataset.amount, 10),
+          parseInt(target.dataset.max, 10),
+        );
+      },
+      "complete-subject": (target) => {
+        this.roadmap.completeSubject(
+          target.dataset.subject,
+          target.dataset.name,
+          parseInt(target.dataset.max, 10),
+        );
+      },
+      login: () => {
+        const email = document.getElementById("auth-email").value;
+        const pass = document.getElementById("auth-password").value;
+        if (!email || !pass)
+          return this.ui.showToast("Preencha todos os campos.", "error");
+        if (email.toLowerCase() !== "jefferson.araujo@camara.leg.br")
+          return this.ui.showToast(
+            "Acesso restrito ao administrador do sistema.",
+            "error",
+          );
+
+        this.ui.showToast("Autenticando...", "success");
+        this.auth.login(email, pass).catch((err) => {
+          console.error(err);
+          this.ui.showToast("Erro: Credenciais inválidas.", "error");
+        });
+      },
+      register: () => {
+        const email = document.getElementById("auth-email").value;
+        const pass = document.getElementById("auth-password").value;
+        if (!email || !pass)
+          return this.ui.showToast("Preencha todos os campos.", "error");
+        if (email.toLowerCase() !== "jefferson.araujo@camara.leg.br")
+          return this.ui.showToast(
+            "Criação de conta restrita ao administrador.",
+            "error",
+          );
+        if (pass.length < 6)
+          return this.ui.showToast(
+            "A senha precisa de pelo menos 6 caracteres.",
+            "error",
+          );
+
+        this.ui.showToast("Criando conta...", "success");
+        this.auth
+          .register(email, pass)
+          .then(() => this.ui.showToast("Conta criada com sucesso!", "success"))
+          .catch((err) => {
+            console.error(err);
+            this.ui.showToast(
+              "Erro ao criar conta. Tente outro e-mail.",
+              "error",
+            );
+          });
+      },
+      logout: () => {
+        if (confirm("Tem certeza que deseja sair?")) {
+          this.auth.logout();
+        }
+      },
+    };
+
     document.addEventListener("click", (e) => {
       // Fechar menu mobile ao clicar fora dele
       const mobileMenu = document.getElementById("mobile-menu");
@@ -162,144 +292,8 @@ export const App = {
       if (!target) return;
 
       const action = target.dataset.action;
-
-      switch (action) {
-        case "timer-start":
-          this.timer.start();
-          break;
-        case "timer-pause":
-          this.timer.pause();
-          break;
-        case "timer-reset":
-          this.timer.reset();
-          break;
-        case "scroll-top":
-          window.scrollTo({ top: 0, behavior: "smooth" });
-          break;
-        case "scroll-to":
-          this.ui.scrollTo(target.dataset.target);
-          break;
-        case "switch-tab":
-          this.ui.switchTab(target.dataset.tab);
-          if (target.dataset.tab === "cycle-a") {
-            this.roadmap.view.animateDynamicCycle();
-          }
-          break;
-        case "toggle-menu": {
-          const menu = document.getElementById("mobile-menu");
-          if (menu) {
-            menu.classList.toggle("hidden");
-            menu.classList.toggle("flex");
-          }
-          break;
-        }
-        case "export-data":
-          this.exportData();
-          break;
-        case "factory-reset":
-          this.factoryReset();
-          break;
-        case "clear-cache":
-          this.clearCache();
-          break;
-        case "download-chart":
-          if (this.chartManager) this.chartManager.downloadRadarChart();
-          break;
-        case "open-stats":
-          this.ui.openStatsModal();
-          break;
-        case "close-stats":
-          this.ui.closeStatsModal();
-          break;
-        case "change-pace": {
-          const newPace = prompt(
-            "Quantas horas você estuda por dia?",
-            this.state.pace || 2,
-          );
-          if (newPace !== null) {
-            const parsed = parseFloat(newPace);
-            if (!isNaN(parsed) && parsed > 0) {
-              this.state.pace = parsed;
-              this.storage.save(this.state);
-              this.roadmap.checkAndRender();
-              this.ui.showToast("Ritmo de estudo atualizado!", "success");
-            } else {
-              this.ui.showToast("Valor inválido.", "error");
-            }
-          }
-          break;
-        }
-        case "toggle-completed":
-          this.roadmap.toggleCompleted();
-          break;
-        case "update-subject":
-          this.roadmap.updateSubject(
-            target.dataset.subject,
-            parseInt(target.dataset.amount, 10),
-            parseInt(target.dataset.max, 10),
-          );
-          break;
-        case "complete-subject":
-          this.roadmap.completeSubject(
-            target.dataset.subject,
-            target.dataset.name,
-            parseInt(target.dataset.max, 10),
-          );
-          break;
-        case "login": {
-          const email = document.getElementById("auth-email").value;
-          const pass = document.getElementById("auth-password").value;
-          if (!email || !pass)
-            return this.ui.showToast("Preencha todos os campos.", "error");
-          if (email.toLowerCase() !== "jefferson.araujo@camara.leg.br")
-            return this.ui.showToast(
-              "Acesso restrito ao administrador do sistema.",
-              "error",
-            );
-
-          this.ui.showToast("Autenticando...", "success");
-          this.auth.login(email, pass).catch((err) => {
-            console.error(err);
-            this.ui.showToast("Erro: Credenciais inválidas.", "error");
-          });
-          break;
-        }
-        case "register": {
-          const email = document.getElementById("auth-email").value;
-          const pass = document.getElementById("auth-password").value;
-          if (!email || !pass)
-            return this.ui.showToast("Preencha todos os campos.", "error");
-          if (email.toLowerCase() !== "jefferson.araujo@camara.leg.br")
-            return this.ui.showToast(
-              "Criação de conta restrita ao administrador.",
-              "error",
-            );
-          if (pass.length < 6)
-            return this.ui.showToast(
-              "A senha precisa de pelo menos 6 caracteres.",
-              "error",
-            );
-
-          this.ui.showToast("Criando conta...", "success");
-          this.auth
-            .register(email, pass)
-            .then(() =>
-              this.ui.showToast("Conta criada com sucesso!", "success"),
-            )
-            .catch((err) => {
-              console.error(err);
-              this.ui.showToast(
-                "Erro ao criar conta. Tente outro e-mail.",
-                "error",
-              );
-            });
-          break;
-        }
-        case "logout":
-          if (confirm("Tem certeza que deseja sair?")) {
-            this.auth.logout();
-          }
-          break;
+      if (actions[action]) {
+        actions[action](target);
       }
     });
 

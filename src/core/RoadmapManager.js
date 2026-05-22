@@ -185,6 +185,8 @@ export default class RoadmapManager {
         this.app.state.progress,
         visibleSubjects,
         this.app.state.simuladoScores,
+        this.app.state.metaSimulado || 80,
+        this.app.state.warningSimulado || 70,
       );
     }
   }
